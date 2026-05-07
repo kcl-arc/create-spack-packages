@@ -1,0 +1,6 @@
+---
+versions:
+  5.0.3:
+  - "+eigen build_type=Release ^boost@1.84.0"
+  6.1.1:
+  - "+eigen build_type=Release"

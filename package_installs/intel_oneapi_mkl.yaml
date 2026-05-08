@@ -1,0 +1,4 @@
+---
+versions:
+  2025.3.0:
+  - "+shared threads=openmp"

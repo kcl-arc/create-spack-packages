@@ -1,0 +1,7 @@
+versions:
+  1.14.3:
+  - "~mpi +hl"
+  - "+mpi +hl ^openmpi"
+  1.14.6:
+  - "~mpi +hl"
+  - "+mpi +hl ^openmpi"

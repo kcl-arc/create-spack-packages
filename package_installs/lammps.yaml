@@ -1,0 +1,7 @@
+---
+versions:
+  20230802.4:
+  - "+cuda cuda_arch=80 fft=mkl ~lib ^cuda@12.2"
+  20250722:
+  - "+cuda cuda_arch=100 fft=mkl ~lib ^cuda@12.8"
+  - "+cuda cuda_arch=80 fft=mkl ~lib ^cuda@12.2"

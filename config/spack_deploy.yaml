@@ -1,0 +1,8 @@
+defaults:
+  arch: zen2
+  compiler:
+    name: gcc
+    version: 13.3.0
+  os: ubuntu24.04
+  lmod:
+    version: 8.5.6

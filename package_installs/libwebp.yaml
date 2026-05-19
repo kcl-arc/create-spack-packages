@@ -1,0 +1,6 @@
+---
+versions:
+  1.2.4:
+  - "+libwebpmux"
+  1.4.0:
+  - "+libwebpmux"

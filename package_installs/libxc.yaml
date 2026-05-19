@@ -1,0 +1,6 @@
+---
+versions:
+  5.1.5:
+  - "+shared"
+  7.0.0:
+  - "+shared"

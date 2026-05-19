@@ -1,0 +1,6 @@
+---
+versions:
+  5.4.3:
+  - "+X ^curl+libidn2"
+  6.0.0:
+  - "+X ^curl+libidn2"

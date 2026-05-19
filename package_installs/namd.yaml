@@ -1,8 +1,0 @@
----
-versions:
-  2.14:
-  - "+cuda cuda_arch=80 ^charmpp@6.10.1 backend=multicore ^cuda@11.8.0"
-  3.0.1:
-  - "+cuda cuda_arch=80 ^charmpp@8.0.0 backend=multicore"
-  3.0.2:
-  - "+cuda cuda_arch=80 ^charmpp@8.0.0 backend=multicore"

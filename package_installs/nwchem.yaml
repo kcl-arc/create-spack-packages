@@ -1,6 +1,0 @@
----
-versions:
-  7.2.0:
-  - "+openmp"
-  7.2.3:
-  - "+openmp"

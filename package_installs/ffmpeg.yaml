@@ -1,6 +1,0 @@
----
-versions:
-  4.3.2:
-  - "+bzlib +gpl +shared +version3"
-  7.1:
-  - ""

@@ -1,6 +1,0 @@
----
-versions:
-  8.44:
-  - "+multibyte +utf"
-  8.45:
-  - "+multibyte +utf"

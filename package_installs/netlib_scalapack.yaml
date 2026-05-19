@@ -1,6 +1,0 @@
----
-versions:
-  2.2.2:
-  - "+shared build_type=Release"
-  2.2.0:
-  - "+shared build_type=Release"

@@ -1,6 +1,0 @@
----
-versions:
-  13.0:
-  - "^binutils+gold+headers ^petsc@3.21.0"
-  16:
-  - ""

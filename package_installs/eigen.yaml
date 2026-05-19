@@ -1,8 +1,0 @@
----
-versions:
-  3.4.0:
-  - "build_type=RelWithDebInfo"
-  3.4.1:
-  - "build_type=RelWithDebInfo"
-  5.0.0:
-  - "build_type=RelWithDebInfo"

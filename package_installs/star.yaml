@@ -1,8 +1,0 @@
----
-versions:
-  2.7.10b:
-  - "^zlib"
-  star@2.7.11a:
-  - "^zlib"
-  star@2.7.11b:
-  - "^zlib"

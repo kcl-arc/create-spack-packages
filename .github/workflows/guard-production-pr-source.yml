@@ -2,15 +2,23 @@ name: Guard Production PR Source
 
 on:
   pull_request:
-    branches: [production]
+    branches: [staging, production]
     types: [opened, reopened, synchronize, edited]
 
 jobs:
   enforce-staging-source:
     runs-on: ubuntu-latest
     steps:
-      - name: Ensure PR source branch is staging
+      - name: Enforce source branch only for production PRs
         run: |
+          echo "Base branch: '${{ github.base_ref }}'"
+          echo "Head branch: '${{ github.head_ref }}'"
+
+          if [ "${{ github.base_ref }}" != "production" ]; then
+            echo "Not a PR to production, skipping source restriction."
+            exit 0
+          fi
+
           if [ "${{ github.head_ref }}" != "staging" ]; then
             echo "Only PRs from 'staging' to 'production' are allowed."
             echo "Current source branch: '${{ github.head_ref }}'"

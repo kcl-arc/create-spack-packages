@@ -73,6 +73,30 @@ class Bowtie2(MakefilePackage):
             files = ["Makefile"]
             filter_file(match, substitute, *files, **kwargs)
 
+    def setup_build_environment(self, env):
+        zlib_prefix = self.spec["zlib-api"].prefix
+        zlib_include = zlib_prefix.include
+        zlib_include_compat = "{0}/zlib-ng".format(zlib_include)
+        zlib_libdir = zlib_prefix.lib if isdir(str(zlib_prefix.lib)) else zlib_prefix.lib64
+
+        cppflags = "-I{0}".format(zlib_include)
+        if isdir(zlib_include_compat):
+            cppflags += " -I{0}".format(zlib_include_compat)
+        ldflags = "-L{0} -Wl,-rpath,{0}".format(zlib_libdir)
+
+        # Bowtie2 make paths are inconsistent about variable usage.
+        # Export standard env vars so compile and link steps can both resolve zlib.
+        env.append_flags("CPPFLAGS", cppflags)
+        env.append_flags("CXXFLAGS", cppflags)
+        env.append_flags("LDFLAGS", ldflags)
+        env.append_flags("LIBS", "-lz")
+        env.prepend_path("CPATH", str(zlib_include))
+        if isdir(zlib_include_compat):
+            env.prepend_path("CPATH", zlib_include_compat)
+        env.prepend_path("LIBRARY_PATH", str(zlib_libdir))
+        env.prepend_path("LD_LIBRARY_PATH", str(zlib_libdir))
+        env.set("ZLIB", self.spec["zlib-api"].libs.ld_flags)
+
     @property
     def build_targets(self):
         make_arg = ["PREFIX={0}".format(self.prefix)]

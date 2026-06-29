@@ -113,10 +113,13 @@ class Bowtie2(MakefilePackage):
         zlib_prefix = self.spec["zlib-api"].prefix
         zlib_include = zlib_prefix.include
         zlib_include_compat = "{0}/zlib-ng".format(zlib_include)
+        zlib_libdir = zlib_prefix.lib if isdir(str(zlib_prefix.lib)) else zlib_prefix.lib64
         cppflags = "-I{0}".format(zlib_include)
         if isdir(zlib_include_compat):
             cppflags += " -I{0}".format(zlib_include_compat)
+        ldflags = "-L{0} -Wl,-rpath,{0}".format(zlib_libdir)
         make_arg.append("CPPFLAGS={0}".format(cppflags))
+        make_arg.append("LDFLAGS={0}".format(ldflags))
 
         if self.spec.satisfies("target=aarch64:"):
             make_arg.append("POPCNT_CAPABILITY=0")

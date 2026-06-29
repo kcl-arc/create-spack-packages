@@ -110,6 +110,14 @@ class Bowtie2(MakefilePackage):
     def build_targets(self):
         make_arg = ["PREFIX={0}".format(self.prefix)]
 
+        zlib_prefix = self.spec["zlib-api"].prefix
+        zlib_include = zlib_prefix.include
+        zlib_include_compat = "{0}/zlib-ng".format(zlib_include)
+        cppflags = "-I{0}".format(zlib_include)
+        if isdir(zlib_include_compat):
+            cppflags += " -I{0}".format(zlib_include_compat)
+        make_arg.append("CPPFLAGS={0}".format(cppflags))
+
         if self.spec.satisfies("target=aarch64:"):
             make_arg.append("POPCNT_CAPABILITY=0")
         return make_arg

@@ -1,6 +1,7 @@
 # Copyright Spack Project Developers. See COPYRIGHT file for details.
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
+
 import os
 import platform
 import sys
@@ -9,29 +10,30 @@ from spack_repo.builtin.build_systems.cuda import CudaPackage
 from spack_repo.builtin.build_systems.makefile import MakefilePackage
 from spack_repo.builtin.build_systems.rocm import ROCmPackage
 
-
 from spack.package import *
 
 
 class Namd(MakefilePackage, CudaPackage, ROCmPackage):
-    """
-    NAMD is a parallel molecular dynamics code designed for
-    high-performance simulation of large biomolecular systems.
-    """
+    """NAMD is a parallel molecular dynamics code designed for
+    high-performance simulation of large biomolecular systems."""
 
     homepage = "https://www.ks.uiuc.edu/Research/namd/"
+    url = "file://{0}/NAMD_2.12_Source.tar.gz".format(os.getcwd())
+    git = "https://charm.cs.illinois.edu/gerrit/namd.git"
+    manual_download = True
+    redistribute(source=False, binary=False)
 
-    maintainers("harrysharma1")
+    maintainers("jcphill")
 
-    # See https://spdx.org/licenses/ for a list. Upon manually verifying
-    # the license, set checked_by to your Github username.
-    license("UNKNOWN", checked_by="harrysharma1")
-
-    version("3.0.2", sha256="0916700dec3342165b7ba2c3b5f99dcff767879d2a4931b5028dba47acd68bd5")
+    version("master", branch="master")
     version("3.0.1", sha256="3be0854545c45e58afb439a96708e127aef435d30113cc89adbab8f4b6888733")
-    version("2.14", sha256="34044d85d9b4ae61650ccdba5cda4794088c3a9075932392dd0752ef8c049235")
-    version("2.13", sha256="cb0b43f520ac6be761899326441541aa00de15897986223c8ce2f0f6e42b52bc")
-    version("2.12", sha256="e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855")
+    version(
+        "2.14",
+        sha256="34044d85d9b4ae61650ccdba5cda4794088c3a9075932392dd0752ef8c049235",
+        preferred=True,
+    )
+    version("2.13", md5="9e3323ed856e36e34d5c17a7b0341e38")
+    version("2.12", md5="2a1191909b1ab03bf0205971ad4d8ee9")
 
     variant(
         "fftw",
@@ -39,19 +41,22 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
         values=("none", "2", "3", "mkl", "amdfftw"),
         description="Enable the use of FFTW/FFTW3/MKL FFT/AMDFFTW",
     )
+
     variant(
         "interface",
         default="tcl",
         values=("none", "tcl", "python"),
         description="Enables Tcl and/or python interface",
     )
+
     variant(
         "avxtiles",
         when="target=x86_64_v4: @2.15:",
         default=False,
-        description="Enable avxtiles supported with NAMD 2.15+"
+        description="Enable avxtiles supported with NAMD 2.15+",
     )
     variant("single_node_gpu", default=False, description="Single node GPU")
+
     # Adding memopt variant to build memory-optimized mode that utilizes a compressed
     # version of the molecular structure and also supports parallel I/O.
     # Refer: https://www.ks.uiuc.edu/Research/namd/wiki/index.cgi?NamdMemoryReduction
@@ -61,6 +66,7 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
         default=False,
         description="Enable memory-optimized build supported with NAMD 2.8+",
     )
+
     # init_tcl_pointers() declaration and implementation are inconsistent
     # "src/colvarproxy_namd.C", line 482: error: inherited member is not
     # allowed
@@ -102,9 +108,6 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
     # https://www.ks.uiuc.edu/Research/namd/2.14/features.html
     depends_on("cuda@6.5.14:7.5.18", when="@2.12 +cuda")
     depends_on("cuda@8.0.61:", when="@2.13: +cuda")
-
-    def url_for_version(self, version):
-        return "file:///software/local_software/namd/NAMD_{0}_Source.tar.gz".format(version)
 
     def _copy_arch_file(self, lib):
         config_filename = "arch/{0}.{1}".format(self.arch, lib)

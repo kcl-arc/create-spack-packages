@@ -5,6 +5,7 @@
 
 from spack_repo.builtin.build_systems.makefile import MakefilePackage
 from os.path import isdir
+from pathlib import Path
 
 from spack.package import *
 
@@ -81,11 +82,29 @@ class Bowtie2(MakefilePackage):
         zlib_include_flags = "-I third_party -I{0}".format(zlib_include)
         if isdir(zlib_include_compat):
             zlib_include_flags += " -I{0}".format(zlib_include_compat)
-        # Require a match here so we immediately detect recipe/path drift.
-        match = r"-I[ \t]+third_party"
-        substitute = zlib_include_flags
-        files = ["Makefile"]
-        filter_file(match, substitute, *files, ignore_absent=False, backup=False, string=False)
+        # Patch the CPPFLAGS assignment directly; this is more reliable than
+        # searching arbitrary compile recipe lines.
+        filter_file(
+            "CPPFLAGS += -I third_party",
+            "CPPFLAGS += {0}".format(zlib_include_flags),
+            "Makefile",
+            ignore_absent=True,
+            backup=False,
+            string=True,
+        )
+        filter_file(
+            "CPPFLAGS += -Ithird_party",
+            "CPPFLAGS += {0}".format(zlib_include_flags),
+            "Makefile",
+            ignore_absent=True,
+            backup=False,
+            string=True,
+        )
+
+        # Fail fast if injection did not land in the staged Makefile.
+        makefile_contents = Path("Makefile").read_text(encoding="utf-8")
+        if zlib_include not in makefile_contents:
+            raise RuntimeError("Failed to inject zlib include path into Bowtie2 Makefile CPPFLAGS")
 
     @property
     def build_targets(self):

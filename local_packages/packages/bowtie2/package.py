@@ -73,52 +73,22 @@ class Bowtie2(MakefilePackage):
             files = ["Makefile"]
             filter_file(match, substitute, *files, **kwargs)
 
-    def setup_build_environment(self, env):
+        # Bowtie2's Makefile hardcodes only '-I third_party' for compilation.
+        # Inject zlib include directories directly so zlib.h is always discoverable.
         zlib_prefix = self.spec["zlib-api"].prefix
         zlib_include = zlib_prefix.include
         zlib_include_compat = "{0}/zlib-ng".format(zlib_include)
-        zlib_libdir = zlib_prefix.lib if isdir(str(zlib_prefix.lib)) else zlib_prefix.lib64
-
-        cppflags = "-I{0}".format(zlib_include)
+        zlib_include_flags = "-I third_party -I{0}".format(zlib_include)
         if isdir(zlib_include_compat):
-            cppflags += " -I{0}".format(zlib_include_compat)
-        ldflags = "-L{0} -Wl,-rpath,{0}".format(zlib_libdir)
-
-        # Bowtie2 make paths are inconsistent about variable usage.
-        # Export standard env vars so compile and link steps can both resolve zlib.
-        env.append_flags("CPPFLAGS", cppflags)
-        env.append_flags("CXXFLAGS", cppflags)
-        env.append_flags("LDFLAGS", ldflags)
-        env.append_flags("LIBS", "-lz")
-        env.prepend_path("CPATH", str(zlib_include))
-        if isdir(zlib_include_compat):
-            env.prepend_path("CPATH", zlib_include_compat)
-        env.prepend_path("LIBRARY_PATH", str(zlib_libdir))
-        env.prepend_path("LD_LIBRARY_PATH", str(zlib_libdir))
-        env.set("ZLIB", self.spec["zlib-api"].libs.ld_flags)
+            zlib_include_flags += " -I{0}".format(zlib_include_compat)
+        match = "-I third_party"
+        substitute = zlib_include_flags
+        files = ["Makefile"]
+        filter_file(match, substitute, *files, **kwargs)
 
     @property
     def build_targets(self):
         make_arg = ["PREFIX={0}".format(self.prefix)]
-
-        # Ensure zlib headers/libs are visible even when Bowtie2 makefiles do
-        # not consume Spack's dependency flags through wrapper defaults.
-        zlib_prefix = self.spec["zlib-api"].prefix
-        zlib_include = zlib_prefix.include
-        zlib_include_compat = "{0}/zlib-ng".format(zlib_include)
-        zlib_libdir = zlib_prefix.lib if isdir(str(zlib_prefix.lib)) else zlib_prefix.lib64
-        zlib_cppflags = "-I{0}".format(zlib_include)
-        if isdir(zlib_include_compat):
-            zlib_cppflags += " -I{0}".format(zlib_include_compat)
-        zlib_ldflags = "-L{0} -Wl,-rpath,{0}".format(zlib_libdir)
-        zlib_libs = "-lz"
-
-        make_arg.append("CPPFLAGS={0}".format(zlib_cppflags))
-        make_arg.append("CXXFLAGS={0}".format(zlib_cppflags))
-        make_arg.append("LDFLAGS={0}".format(zlib_ldflags))
-        make_arg.append("LIBS={0}".format(zlib_libs))
-        make_arg.append("EXTRA_FLAGS={0}".format(zlib_cppflags))
-        make_arg.append("EXTRA_LDFLAGS={0} {1}".format(zlib_ldflags, zlib_libs))
 
         if self.spec.satisfies("target=aarch64:"):
             make_arg.append("POPCNT_CAPABILITY=0")

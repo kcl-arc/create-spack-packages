@@ -5,7 +5,6 @@
 
 from spack_repo.builtin.build_systems.makefile import MakefilePackage
 from os.path import isdir
-from pathlib import Path
 
 from spack.package import *
 
@@ -40,6 +39,7 @@ class Bowtie2(MakefilePackage):
     depends_on("simde", when="@2.4.0: target=aarch64:", type="link")
     depends_on("simde", when="@2.4.0: target=ppc64le:", type="link")
 
+    patch("bowtie2-2.5.4.patch", when="@2.5.4", level=0)
     patch("bowtie2-2.2.5.patch", when="@2.2.5", level=0)
     patch("bowtie2-2.3.1.patch", when="@2.3.1", level=0)
     patch("bowtie2-2.3.0.patch", when="@2.3.0", level=0)
@@ -74,38 +74,6 @@ class Bowtie2(MakefilePackage):
             files = ["Makefile"]
             filter_file(match, substitute, *files, **kwargs)
 
-        # Bowtie2's Makefile hardcodes only '-I third_party' for compilation.
-        # Inject zlib include directories directly so zlib.h is always discoverable.
-        zlib_prefix = self.spec["zlib-api"].prefix
-        zlib_include = zlib_prefix.include
-        zlib_include_compat = "{0}/zlib-ng".format(zlib_include)
-        zlib_include_flags = "-I third_party -I{0}".format(zlib_include)
-        if isdir(zlib_include_compat):
-            zlib_include_flags += " -I{0}".format(zlib_include_compat)
-        # Patch the CPPFLAGS assignment directly; this is more reliable than
-        # searching arbitrary compile recipe lines.
-        filter_file(
-            "CPPFLAGS += -I third_party",
-            "CPPFLAGS += {0}".format(zlib_include_flags),
-            "Makefile",
-            ignore_absent=True,
-            backup=False,
-            string=True,
-        )
-        filter_file(
-            "CPPFLAGS += -Ithird_party",
-            "CPPFLAGS += {0}".format(zlib_include_flags),
-            "Makefile",
-            ignore_absent=True,
-            backup=False,
-            string=True,
-        )
-
-        # Fail fast if injection did not land in the staged Makefile.
-        makefile_contents = Path("Makefile").read_text(encoding="utf-8")
-        if zlib_include not in makefile_contents:
-            raise RuntimeError("Failed to inject zlib include path into Bowtie2 Makefile CPPFLAGS")
-
     @property
     def build_targets(self):
         make_arg = ["PREFIX={0}".format(self.prefix)]
@@ -118,8 +86,8 @@ class Bowtie2(MakefilePackage):
         if isdir(zlib_include_compat):
             cppflags += " -I{0}".format(zlib_include_compat)
         ldflags = "-L{0} -Wl,-rpath,{0}".format(zlib_libdir)
-        make_arg.append("CPPFLAGS={0}".format(cppflags))
-        make_arg.append("LDFLAGS={0}".format(ldflags))
+        make_arg.append("SPACK_CPPFLAGS={0}".format(cppflags))
+        make_arg.append("SPACK_LDFLAGS={0}".format(ldflags))
 
         if self.spec.satisfies("target=aarch64:"):
             make_arg.append("POPCNT_CAPABILITY=0")

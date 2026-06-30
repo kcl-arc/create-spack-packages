@@ -1,0 +1,21 @@
+--- Makefile.orig	2024-06-03 12:00:00.000000000 +0000
++++ Makefile	2026-06-30 12:00:00.000000000 +0000
+@@ -29,6 +29,9 @@
+ 
+ LDLIBS := -lpthread -lz
+ 
++SPACK_CPPFLAGS ?=
++SPACK_LDFLAGS ?=
++
+ HEADERS := $(wildcard *.h)
+ BOWTIE_MM := 1
+ BOWTIE_SHARED_MEM :=
+@@ -118,6 +121,8 @@
+ ifeq (1, $(POPCNT_CAPABILITY))
+   CXXFLAGS += -DPOPCNT_CAPABILITY
+   CPPFLAGS += -I third_party
++  CPPFLAGS += $(SPACK_CPPFLAGS)
++  LDFLAGS += $(SPACK_LDFLAGS)
+ endif
+ 
+ MM_DEF :=

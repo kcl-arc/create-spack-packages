@@ -38,7 +38,9 @@ class Plink2(MakefilePackage):
     depends_on("lapack")
 
     # install failed because the build could not find `cblas.h`
-    patch("plink2-cblas-include.patch", level=0)
+    @property
+    def build_targets(self):
+        return ["CPPFLAGS={0}".format(self.spec["blas"].headers.cpp_flags)]
 
     build_directory = "2.0/build_dynamic"
 

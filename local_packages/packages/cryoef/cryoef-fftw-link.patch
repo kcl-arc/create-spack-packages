@@ -1,5 +1,5 @@
---- a/package.py
-+++ b/package.py
+--- package.py
++++ package.py
 @@
 -    depends_on("fftw-api@3")
 +    depends_on("fftw", type=("build", "link"))

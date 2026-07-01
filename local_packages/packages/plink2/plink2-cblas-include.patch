@@ -1,5 +1,5 @@
---- a/package.py
-+++ b/package.py
+--- package.py
++++ package.py
 @@
      depends_on("zstd@1.5.2:")
      depends_on("libdeflate@1.10:")

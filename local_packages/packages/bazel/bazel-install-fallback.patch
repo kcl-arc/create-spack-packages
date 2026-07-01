@@ -1,5 +1,5 @@
---- a/package.py
-+++ b/package.py
+--- package.py
++++ package.py
 @@
 -import re
 +import os

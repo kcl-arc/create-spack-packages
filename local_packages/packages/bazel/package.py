@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+import os
 import re
 
 from spack_repo.builtin.build_systems.generic import Package
@@ -79,9 +80,6 @@ class Bazel(Package):
         sha256="e695708d20fbb84d94e1d2a896330de6222f9f20bb34ef65cdfe634d3454f06c",
         when="@7.0",
     )
-
-    # `bazel` reaches install and then fails because `output/bazel` does not exist
-    patch("bazel-install-fallback.patch", level=0)
 
     # Pass Spack environment variables to the build
     patch("bazelruleclassprovider-0.25.patch")
@@ -225,7 +223,12 @@ class Bazel(Package):
 
     def install(self, spec, prefix):
         mkdir(prefix.bin)
-        install("output/bazel", prefix.bin)
+        candidates = ["output/bazel", "output/host/bin/bazel", "bazel-bin/src/bazel"]
+        for candidate in candidates:
+            if os.path.isfile(candidate):
+                install(candidate, prefix.bin)
+                return
+        raise InstallError("bazel executable not found after compile")
 
     @run_after("install")
     @on_package_attributes(run_tests=True)

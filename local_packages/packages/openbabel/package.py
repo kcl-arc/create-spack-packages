@@ -39,7 +39,7 @@ class Openbabel(CMakePackage):
     depends_on("cxx", type="build")  # generated
 
     depends_on("python", type=("build", "run"), when="+python")
-    depends_on("cmake@3.1:", type="build")
+    depends_on("cmake@3.1:3.31", type="build")
     depends_on("pkgconfig", type="build")
     depends_on("swig@2.0:", type="build", when="+python")
 
@@ -55,9 +55,6 @@ class Openbabel(CMakePackage):
 
     depends_on("maeparser", when="+maeparser")
     depends_on("coordgen", when="+coordgen")
-
-    # `openbabel` failed during CMake configure because it uses CMake 4 with a project that still expects older policy behavior
-    patch("openbabel-cmake-upper-bound.patch", level=0)
 
     # Needed for Python 3.6 support
     patch("python-3.6-rtld-global.patch", when="@:2.4.1+python")

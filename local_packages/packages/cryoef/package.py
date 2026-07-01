@@ -18,14 +18,11 @@ class Cryoef(MakefilePackage):
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")
-    depends_on("fftw-api@3")
-
-    # install failed with: cannot find -lfftw3: No such file or directory
-    patch("cryoef-fftw-link.patch", level=0)
+    depends_on("fftw", type=("build", "link"))
 
     def patch(self):
         filter_file(
-            "-lfftw3", f"-lfftw3 {self.spec['fftw-api'].libs.ld_flags} -no-pie", "Makefile"
+            "-lfftw3", f"-lfftw3 {self.spec['fftw'].libs.ld_flags} -no-pie", "Makefile"
         )
 
     def install(self, spec, prefix):

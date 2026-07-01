@@ -1,0 +1,24 @@
+--- a/package.py
++++ b/package.py
+@@
+     depends_on("zstd@1.5.2:")
+     depends_on("libdeflate@1.10:")
+     depends_on("blas")
+     depends_on("lapack")
+@@
+     def edit(self, spec, prefix):
+         with working_dir(self.build_directory):
+             makefile = FileFilter("Makefile")
+             if "avx2" in spec.target:
+                 makefile.filter(r"^NO_AVX2 = 1", "NO_AVX2 =")
+@@
+             makefile.filter(
+                 r"^  BLASFLAGS=-llapack -lblas -lcblas -latlas",
+                 "  BLASFLAGS={0} {1}".format(
+                     spec["blas"].libs.ld_flags, spec["lapack"].libs.ld_flags
+                 ),
+             )
++
++    @property
++    def build_targets(self):
++        return ["CPPFLAGS={0}".format(self.spec["blas"].headers.cpp_flags)]

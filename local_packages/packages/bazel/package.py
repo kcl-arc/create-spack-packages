@@ -71,8 +71,8 @@ class Bazel(Package):
     depends_on("c", type="build")
     depends_on("cxx", type="build")
     depends_on("java@21", when="@7.2:", type=("build", "run"))
-    depends_on("java@11", when="@5.3:7.1", type=("build", "run"))
-    depends_on("java@8,11", when="@:5.2", type=("build", "run"))
+    depends_on("java@11", when="@5.2:7.1", type=("build", "run"))
+    depends_on("java@8,11", when="@:5.1", type=("build", "run"))
     depends_on("python+pythoncmd", type=("build", "run"))
 
     patch(

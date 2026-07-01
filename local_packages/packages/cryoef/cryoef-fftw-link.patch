@@ -1,0 +1,12 @@
+--- a/package.py
++++ b/package.py
+@@
+-    depends_on("fftw-api@3")
++    depends_on("fftw", type=("build", "link"))
+@@
+-        filter_file(
+-            "-lfftw3", f"-lfftw3 {self.spec['fftw-api'].libs.ld_flags} -no-pie", "Makefile"
+-        )
++        filter_file(
++            "-lfftw3", f"-lfftw3 {self.spec['fftw'].libs.ld_flags} -no-pie", "Makefile"
++        )

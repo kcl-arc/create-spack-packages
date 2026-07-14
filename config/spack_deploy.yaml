@@ -8,3 +8,4 @@ defaults:
   os: ubuntu24.04
   lmod:
     version: 8.7.55
+    package_path: /software/spack_v1_1_1/module_tracking/

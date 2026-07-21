@@ -101,27 +101,28 @@ class BlastPlus(AutotoolsPackage):
         msg="zstd, zlib, and bzip2 are required 2.17 and later",
     )
 
-    @run_after('configure')
-    def stub_missing_makefiles(self):
+    @run_before('configure')
+    def scrub_test_dirs(self):
         import os
-        import glob
-        # The NCBI configure script skips generating Makefiles for test directories 
-        # when testing is disabled, but parent Makefiles still blindly recurse into them.
-        # We inject invincible dummy Makefiles to safely catch and pass the recursion.
-        for build_base in glob.glob('c++/*/build'):
-            for src_test_dir in glob.glob('c++/src/**/test', recursive=True):
-                rel_path = os.path.relpath(src_test_dir, 'c++/src')
-                build_test_dir = os.path.join(build_base, rel_path)
-                os.makedirs(build_test_dir, exist_ok=True)
+        import re
+        # Walk the raw source code and permanently erase 'test' from all Makefile blueprints
+        for root, dirs, files in os.walk('c++/src'):
+            if 'Makefile.in' in files:
+                filepath = os.path.join(root, 'Makefile.in')
+                with open(filepath, 'r') as f:
+                    content = f.read()
 
-                dummy_makefile = os.path.join(build_test_dir, 'Makefile')
-                if not os.path.exists(dummy_makefile):
-                    with open(dummy_makefile, 'w') as f:
-                        f.write(".PHONY: all all_r all_p clean purge requirements reqs\n")
-                        f.write("all all_r all_p clean purge requirements reqs:\n")
-                        f.write("\t@echo 'Skipping dummy test directory'\n")
-                        f.write(".DEFAULT:\n")
-                        f.write("\t@echo 'Skipping unknown target'\n")
+                lines = content.split('\n')
+                modified = False
+                for i, line in enumerate(lines):
+                    # If the line defines a sub-project, remove the exact word 'test'
+                    if 'SUB_PROJ' in line and re.search(r'\btest\b', line):
+                        lines[i] = re.sub(r'\btest\b', '', line)
+                        modified = True
+
+                if modified:
+                    with open(filepath, 'w') as f:
+                        f.write('\n'.join(lines))
 
     def configure_args(self):
         spec = self.spec

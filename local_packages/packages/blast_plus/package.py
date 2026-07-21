@@ -28,17 +28,8 @@ class BlastPlus(AutotoolsPackage):
     version("2.6.0", sha256="0510e1d607d0fb4389eca50d434d5a0be787423b6850b3a4f315abc2ef19c996")
     version("2.2.30", sha256="26f72d51c81b9497f33b7274109565c36692572faef4d72377f79b7e59910e40")
 
-    # homebrew sez: Fixed upstream in future version > 2.6
-    # But this bug sez that it will be fixed in 2.6
-    #    https://github.com/Homebrew/homebrew-science/pull/4740
-    # The 2.6.0 src still matches the "before" bit of the patch
-    # so it's probably still "needed".
-    # On the other hand, the `find` command is broken and there
-    # aren't any .svn dirs in the tree, so I've updated their patch
-    # to just comment out the block.
     patch("blast-make-fix2.5.0.diff", when="@2.5.0:2.6.0")
 
-    # See https://github.com/Homebrew/homebrew-science/issues/2337#issuecomment-170011511
     @when("@:2.2.31")
     def patch(self):
         filter_file(
@@ -47,9 +38,6 @@ class BlastPlus(AutotoolsPackage):
             "c++/src/build-system/configure",
             string=True,
         )
-
-    # No...
-    # depends_on :mysql => :optional
 
     depends_on("c", type="build")  # generated
     depends_on("cxx", type="build")  # generated
@@ -60,8 +48,6 @@ class BlastPlus(AutotoolsPackage):
     variant("jpeg", default=True, description="Build with jpeg support")
     variant("png", default=True, description="Build with png support")
     variant("freetype", default=True, description="Build with freetype support")
-    # variant('hdf5', default=True,
-    #        description='Build with hdf5 support')
     variant("gnutls", default=True, description="Build with gnutls support")
     variant("openssl", default=True, description="Build with openssl support")
     variant("zlib", default=True, description="Build with zlib support")
@@ -76,7 +62,6 @@ class BlastPlus(AutotoolsPackage):
     depends_on("jpeg", when="+jpeg")
     depends_on("libpng", when="+png")
     depends_on("freetype", when="+freetype")
-    # depends_on('hdf5', when='+hdf5')
     depends_on("gnutls", when="+gnutls")
     depends_on("openssl", when="+openssl")
     depends_on("zlib-api", when="+zlib")
@@ -110,19 +95,27 @@ class BlastPlus(AutotoolsPackage):
             if 'Makefile.in' in files:
                 filepath = os.path.join(root, 'Makefile.in')
                 with open(filepath, 'r') as f:
-                    content = f.read()
+                    lines = f.readlines()
 
-                lines = content.split('\n')
                 modified = False
+                in_proj = False
                 for i, line in enumerate(lines):
-                    # If the line defines a sub-project, remove the exact word 'test'
-                    if 'SUB_PROJ' in line and re.search(r'\btest\b', line):
-                        lines[i] = re.sub(r'\btest\b', '', line)
-                        modified = True
+                    # Detect if we are inside a SUB_PROJ or EXPENDABLE_SUB_PROJ block
+                    if re.match(r'^\s*(SUB_PROJ|EXPENDABLE_SUB_PROJ|POTENTIAL_SUB_PROJ)\s*=', line):
+                        in_proj = True
+                    
+                    if in_proj:
+                        # Remove the exact word 'test' (respecting word boundaries so we don't break 'test_boost')
+                        if re.search(r'\btest\b', line):
+                            lines[i] = re.sub(r'\btest\b', '', line)
+                            modified = True
+                        # If the line doesn't end with a continuation character '\', the block is over
+                        if not line.rstrip().endswith('\\'):
+                            in_proj = False
 
                 if modified:
                     with open(filepath, 'w') as f:
-                        f.write('\n'.join(lines))
+                        f.writelines(lines)
 
     def configure_args(self):
         spec = self.spec
@@ -133,9 +126,6 @@ class BlastPlus(AutotoolsPackage):
             config_args.append("--with-64")
         if spec.satisfies("+static"):
             config_args.append("--with-static")
-            # FIXME
-            # args << "--with-static-exe" unless OS.linux?
-            # args << "--with-dll" if build.with? "dll"
         else:
             config_args.extend(["--with-dll", "--without-static", "--without-static-exe"])
 
@@ -155,13 +145,6 @@ class BlastPlus(AutotoolsPackage):
             config_args.append("--without-freetype")
 
         config_args.append("--without-hdf5")
-        # if '+hdf5' in spec:
-        #     # FIXME
-        #     config_args.append(
-        #         f'--with-hdf5={self.spec["hdf5"].prefix}')
-        #     )
-        # else:
-        #     config_args.append('--without-hdf5')
 
         if spec.satisfies("+zlib"):
             config_args.append(f"--with-z={self.spec['zlib-api'].prefix}")
@@ -201,12 +184,12 @@ class BlastPlus(AutotoolsPackage):
         if spec.satisfies("+perl"):
             config_args.append(f"--with-perl={self.spec['perl'].prefix}")
         else:
-            config_args.append("--without-python")
+            config_args.append("--without-perl")
 
-        with when("+sqlite"):
+        if spec.satisfies("+sqlite"):
             config_args.append(f"--with-sqlite3={self.spec['sqlite'].prefix}")
 
-        with when("+zstd"):
+        if spec.satisfies("+zstd"):
             config_args.append(f"--with-zstd={self.spec['zstd'].prefix}")
 
         return config_args

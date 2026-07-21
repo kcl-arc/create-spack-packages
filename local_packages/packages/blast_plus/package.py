@@ -90,32 +90,58 @@ class BlastPlus(AutotoolsPackage):
     def scrub_test_dirs(self):
         import os
         import re
-        # Walk the raw source code and permanently erase 'test' from all Makefile blueprints
-        for root, dirs, files in os.walk('c++/src'):
-            if 'Makefile.in' in files:
-                filepath = os.path.join(root, 'Makefile.in')
-                with open(filepath, 'r') as f:
-                    lines = f.readlines()
-
-                modified = False
-                in_proj = False
-                for i, line in enumerate(lines):
-                    # Detect if we are inside a SUB_PROJ or EXPENDABLE_SUB_PROJ block
-                    if re.match(r'^\s*(SUB_PROJ|EXPENDABLE_SUB_PROJ|POTENTIAL_SUB_PROJ)\s*=', line):
-                        in_proj = True
+        
+        # Walk the raw source code and permanently erase 'test' from all Makefile blueprints and project lists
+        for root, dirs, files in os.walk('c++'):
+            for filename in files:
+                filepath = os.path.join(root, filename)
+                
+                # Scrub 'test' from project list files
+                if filename.endswith('.lst'):
+                    try:
+                        with open(filepath, 'r') as f:
+                            lines = f.readlines()
+                    except Exception:
+                        continue
                     
-                    if in_proj:
-                        # Remove the exact word 'test' (respecting word boundaries so we don't break 'test_boost')
+                    modified = False
+                    for i, line in enumerate(lines):
                         if re.search(r'\btest\b', line):
-                            lines[i] = re.sub(r'\btest\b', '', line)
+                            # Comment out the line instead of empty string to avoid empty line issues
+                            lines[i] = "# " + line
                             modified = True
-                        # If the line doesn't end with a continuation character '\', the block is over
-                        if not line.rstrip().endswith('\\'):
-                            in_proj = False
+                    
+                    if modified:
+                        with open(filepath, 'w') as f:
+                            f.writelines(lines)
 
-                if modified:
-                    with open(filepath, 'w') as f:
-                        f.writelines(lines)
+                # Scrub 'test' from Makefile blueprints
+                elif 'Makefile' in filename or filename.endswith('.in') or filename.endswith('.mk') or filename.endswith('.skel'):
+                    try:
+                        with open(filepath, 'r') as f:
+                            lines = f.readlines()
+                    except Exception:
+                        continue
+
+                    modified = False
+                    in_proj = False
+                    for i, line in enumerate(lines):
+                        # Detect if we are inside a SUB_PROJ block (allowing for =, +=, :=, etc.)
+                        if re.match(r'^\s*(SUB_PROJ|EXPENDABLE_SUB_PROJ|POTENTIAL_SUB_PROJ)\b', line):
+                            in_proj = True
+                        
+                        if in_proj:
+                            # Remove the exact word 'test' (respecting word boundaries so we don't break 'test_boost')
+                            if re.search(r'\btest\b', line):
+                                lines[i] = re.sub(r'\btest\b', '', line)
+                                modified = True
+                            # If the line doesn't end with a continuation character '\', the block is over
+                            if not line.rstrip().endswith('\\'):
+                                in_proj = False
+
+                    if modified:
+                        with open(filepath, 'w') as f:
+                            f.writelines(lines)
 
     def configure_args(self):
         spec = self.spec

@@ -1,0 +1,16 @@
+--- a/CMakeLists.txt	2026-07-21 23:43:42
++++ b/CMakeLists.txt	2026-07-21 23:43:42
+@@ -2287,7 +2287,12 @@
+   ENDIF()
+ ENDIF()
+ 
+-INCLUDE(cmake/abi_check.cmake)
++# Spack: the ABI check compares include/mysql/*.pp preprocessor
++# snapshots against output from the build compiler/glibc. The
++# snapshots are frozen to Oracle's CI toolchain and reliably fail
++# to match on other distros/compilers even with no real ABI
++# change, so skip the check entirely.
++# INCLUDE(cmake/abi_check.cmake)
+ INCLUDE(cmake/tags.cmake)
+ 
+ CONFIGURE_FILE(config.h.cmake   ${CMAKE_BINARY_DIR}/include/my_config.h)

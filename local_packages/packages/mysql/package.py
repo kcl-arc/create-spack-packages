@@ -18,6 +18,14 @@ class Mysql(CMakePackage):
 
     version("8.0.35", sha256="917c5ed38704e99211185ce4be24e33a8c19c91241ed73af4181a6f38d1574c2")
 
+    # MySQL's build unconditionally runs an ABI check (cmake/abi_check.cmake)
+    # on Linux+GCC that diffs freshly preprocessed headers against .pp
+    # snapshots frozen to Oracle's own CI toolchain. There is no upstream
+    # CMake cache variable to disable it (STRICT_ABI_CHECK is not a real
+    # option -- CMake warns it is unused), and it reliably fails against
+    # other compiler/glibc combinations even with no actual ABI change.
+    patch("disable-abi-check.patch", when="@8.0.35")
+
     variant("client_only", default=False, description="Build and install client only.")
     variant(
         "cxxstd",
@@ -103,7 +111,6 @@ class Mysql(CMakePackage):
             self.define("WITH_BOOST", spec["boost"].prefix),
             self.define("LOCAL_BOOST_DIR", spec["boost"].prefix),
             self.define("WITH_ZSTD", "system"),
-            self.define("STRICT_ABI_CHECK", False),
         ]
 
     def setup_build_environment(self, env: EnvironmentModifications) -> None:

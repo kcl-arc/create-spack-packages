@@ -90,13 +90,19 @@ class BlastPlus(AutotoolsPackage):
     def scrub_test_dirs(self):
         import os
         import re
+        import shutil
         
-        # Walk the raw source code and permanently erase 'test' from all Makefile blueprints and project lists
+        # 1. Physically delete all 'test' directories to prevent configure from discovering them
+        for root, dirs, files in os.walk('c++', topdown=True):
+            if 'test' in dirs:
+                shutil.rmtree(os.path.join(root, 'test'))
+                dirs.remove('test')
+
+        # 2. Scrub 'test' from all Makefiles and project lists
         for root, dirs, files in os.walk('c++'):
             for filename in files:
                 filepath = os.path.join(root, filename)
                 
-                # Scrub 'test' from project list files
                 if filename.endswith('.lst'):
                     try:
                         with open(filepath, 'r') as f:
@@ -107,7 +113,6 @@ class BlastPlus(AutotoolsPackage):
                     modified = False
                     for i, line in enumerate(lines):
                         if re.search(r'\btest\b', line):
-                            # Comment out the line instead of empty string to avoid empty line issues
                             lines[i] = "# " + line
                             modified = True
                     
@@ -115,8 +120,7 @@ class BlastPlus(AutotoolsPackage):
                         with open(filepath, 'w') as f:
                             f.writelines(lines)
 
-                # Scrub 'test' from Makefile blueprints
-                elif 'Makefile' in filename or filename.endswith('.in') or filename.endswith('.mk') or filename.endswith('.skel'):
+                elif 'Makefile' in filename or filename.endswith(('.in', '.mk', '.skel', '.lib', '.app')):
                     try:
                         with open(filepath, 'r') as f:
                             lines = f.readlines()
@@ -126,16 +130,14 @@ class BlastPlus(AutotoolsPackage):
                     modified = False
                     in_proj = False
                     for i, line in enumerate(lines):
-                        # Detect if we are inside a SUB_PROJ block (allowing for =, +=, :=, etc.)
-                        if re.match(r'^\s*(SUB_PROJ|EXPENDABLE_SUB_PROJ|POTENTIAL_SUB_PROJ)\b', line):
+                        # Match ANY variable ending in PROJ (SUB_PROJ, APP_PROJ, EXPENDABLE_SUB_PROJ, etc.)
+                        if re.match(r'^\s*[A-Z_0-9]*PROJ\b', line):
                             in_proj = True
                         
                         if in_proj:
-                            # Remove the exact word 'test' (respecting word boundaries so we don't break 'test_boost')
                             if re.search(r'\btest\b', line):
                                 lines[i] = re.sub(r'\btest\b', '', line)
                                 modified = True
-                            # If the line doesn't end with a continuation character '\', the block is over
                             if not line.rstrip().endswith('\\'):
                                 in_proj = False
 

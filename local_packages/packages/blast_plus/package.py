@@ -101,12 +101,12 @@ class BlastPlus(AutotoolsPackage):
         msg="zstd, zlib, and bzip2 are required 2.17 and later",
     )
 
-    @run_before('build')
+    @run_before('configure')
     def disable_corelib_tests(self):
         # Forcibly stop the Makefile from recursing into the broken test directory
         filter_file(
-            r'SUB_PROJ = test',
-            r'#SUB_PROJ = test',
+            r'SUB_PROJ\s*=.*test.*',
+            r'#SUB_PROJ = test disabled',
             'c++/src/corelib/Makefile.in',
             ignore_absent=True
         )

@@ -101,15 +101,27 @@ class BlastPlus(AutotoolsPackage):
         msg="zstd, zlib, and bzip2 are required 2.17 and later",
     )
 
-    @run_before('configure')
-    def disable_corelib_tests(self):
-        # Forcibly stop the Makefile from recursing into the broken test directory
-        filter_file(
-            r'SUB_PROJ\s*=.*test.*',
-            r'#SUB_PROJ = test disabled',
-            'c++/src/corelib/Makefile.in',
-            ignore_absent=True
-        )
+    @run_after('configure')
+    def stub_missing_makefiles(self):
+        import os
+        import glob
+        # The NCBI configure script skips generating Makefiles for test directories 
+        # when testing is disabled, but parent Makefiles still blindly recurse into them.
+        # We inject invincible dummy Makefiles to safely catch and pass the recursion.
+        for build_base in glob.glob('c++/*/build'):
+            for src_test_dir in glob.glob('c++/src/**/test', recursive=True):
+                rel_path = os.path.relpath(src_test_dir, 'c++/src')
+                build_test_dir = os.path.join(build_base, rel_path)
+                os.makedirs(build_test_dir, exist_ok=True)
+
+                dummy_makefile = os.path.join(build_test_dir, 'Makefile')
+                if not os.path.exists(dummy_makefile):
+                    with open(dummy_makefile, 'w') as f:
+                        f.write(".PHONY: all all_r all_p clean purge requirements reqs\n")
+                        f.write("all all_r all_p clean purge requirements reqs:\n")
+                        f.write("\t@echo 'Skipping dummy test directory'\n")
+                        f.write(".DEFAULT:\n")
+                        f.write("\t@echo 'Skipping unknown target'\n")
 
     def configure_args(self):
         spec = self.spec

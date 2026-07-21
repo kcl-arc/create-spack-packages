@@ -56,6 +56,10 @@ class Mysql(CMakePackage):
     depends_on("gmake@3.75:", type="build")
     depends_on("pkgconfig", type="build")
     depends_on("doxygen", type="build")
+    # mysys/CMakeLists.txt shells out to a bare `diff` in a POST_BUILD step
+    # (build_id_test, gated on HAVE_BUILD_ID_SUPPORT) with no CMake option
+    # to skip it; Spack's build sandbox PATH won't have it unless declared.
+    depends_on("diffutils", type="build")
 
     # Each version of MySQL requires a specific version of boost
     # See BOOST_PACKAGE_NAME in cmake/boost.cmake

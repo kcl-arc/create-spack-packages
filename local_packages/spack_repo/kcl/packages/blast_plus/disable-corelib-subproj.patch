@@ -1,0 +1,17 @@
+--- a/c++/src/corelib/Makefile.in	2026-07-22 02:11:48
++++ b/c++/src/corelib/Makefile.in	2026-07-22 02:11:57
+@@ -8,7 +8,13 @@
+ 
+ USR_PROJ = precompile
+ LIB_PROJ = corelib test_mt test_boost
+-SUB_PROJ = test jaeger opentelemetry
++# Spack: test/jaeger/opentelemetry are not shipped in the blast+-only
++# source export, but this meta-Makefile still lists them as SUB_PROJ,
++# so "make" tries to recurse into them and dies with e.g.
++# "No rule to make target 'all_r'" once they're auto-vivified from
++# the generic Makefile.in.skel. Nothing under corelib actually needs
++# them to build blast+, so just don't list them.
++SUB_PROJ =
+ PROJ_TAG = core
+ 
+ EXTRA_CONFIGURABLES = Makefile.precompile ncbicfg.c

@@ -94,17 +94,17 @@ class BlastPlus(AutotoolsPackage):
 
     configure_directory = "c++"
 
-    # The NCBI C++ toolkit's meta-Makefile build system recurses into
-    # subdirectories (e.g. corelib's SUB_PROJ = test jaeger opentelemetry)
-    # that this trimmed blast+-only source export doesn't ship. Those
-    # missing subdirectories get bootstrapped on the fly from a generic
-    # skeleton the first time they're needed, and that bootstrap isn't
-    # safe under Spack's own parallel/jobserver-coordinated make -- it
-    # loses the race and dies with e.g. "No rule to make target 'all_r'".
-    # Serializing the build avoids the race (this is a known-fragile
-    # area of the toolkit's recursive make; see e.g.
-    # https://github.com/ncbi/ngs/issues/7).
-    parallel = False
+    # corelib's meta-Makefile (c++/src/corelib/Makefile.in) lists
+    # "SUB_PROJ = test jaeger opentelemetry", but none of those
+    # subdirectories are shipped in this trimmed blast+-only source
+    # export. The build system auto-vivifies a generic stub Makefile
+    # for each on first use, and that stub doesn't define an "all_r"
+    # target, so the recursive build dies with e.g. "No rule to make
+    # target 'all_r'" in corelib/test. This is fully deterministic
+    # (reproduces identically under -j1), not a parallel-build race,
+    # so just drop those subdirectories from SUB_PROJ -- nothing under
+    # corelib needs them to build blast+.
+    patch("disable-corelib-subproj.patch", when="@2.17.0")
 
     requires("+sqlite", when="@2.15.0:", msg="sqlite support is required in 2.15 and later")
     requires(

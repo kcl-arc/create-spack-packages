@@ -38,6 +38,26 @@ class BlastPlus(AutotoolsPackage):
     # to just comment out the block.
     patch("blast-make-fix2.5.0.diff", when="@2.5.0:2.6.0")
 
+    # corelib's meta-Makefile (c++/src/corelib/Makefile.in) lists
+    # "SUB_PROJ = test jaeger opentelemetry", but none of those
+    # subdirectories are shipped in this trimmed blast+-only source
+    # export. The build system auto-vivifies a generic stub Makefile
+    # for each on first use, and that stub doesn't define an "all_r"
+    # target, so the recursive build dies with e.g. "No rule to make
+    # target 'all_r'" in corelib/test. This is fully deterministic
+    # (reproduces identically under -j1), not a parallel-build race,
+    # so just drop those subdirectories from SUB_PROJ -- nothing under
+    # corelib needs them to build blast+.
+    #
+    # NOTE: this directive call must stay above the `def patch(self):`
+    # method below -- once that method is defined, the name `patch` in
+    # this class body is rebound from the Spack directive to the
+    # method itself, and a later `patch(...)` call here would invoke
+    # the method (with the filename as a bogus `self`) instead of
+    # registering a file patch. That previously broke loading this
+    # package entirely ('str' object has no attribute 'spec').
+    patch("disable-corelib-subproj.patch", when="@2.17.0")
+
     # See https://github.com/Homebrew/homebrew-science/issues/2337#issuecomment-170011511
     @when("@:2.2.31")
     def patch(self):
@@ -93,18 +113,6 @@ class BlastPlus(AutotoolsPackage):
     depends_on("zstd", when="+zstd")
 
     configure_directory = "c++"
-
-    # corelib's meta-Makefile (c++/src/corelib/Makefile.in) lists
-    # "SUB_PROJ = test jaeger opentelemetry", but none of those
-    # subdirectories are shipped in this trimmed blast+-only source
-    # export. The build system auto-vivifies a generic stub Makefile
-    # for each on first use, and that stub doesn't define an "all_r"
-    # target, so the recursive build dies with e.g. "No rule to make
-    # target 'all_r'" in corelib/test. This is fully deterministic
-    # (reproduces identically under -j1), not a parallel-build race,
-    # so just drop those subdirectories from SUB_PROJ -- nothing under
-    # corelib needs them to build blast+.
-    patch("disable-corelib-subproj.patch", when="@2.17.0")
 
     requires("+sqlite", when="@2.15.0:", msg="sqlite support is required in 2.15 and later")
     requires(

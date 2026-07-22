@@ -1,6 +1,6 @@
 diff -ru a/c++/src/algo/Makefile.in b/c++/src/algo/Makefile.in
---- a/c++/src/algo/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/algo/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/algo/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/algo/Makefile.in	2026-07-22 09:10:05
 @@ -3,8 +3,7 @@
  # Meta-makefile("ALGO" project)
  #################################
@@ -12,8 +12,8 @@ diff -ru a/c++/src/algo/Makefile.in b/c++/src/algo/Makefile.in
  REQUIRES = objects algo
  
 diff -ru a/c++/src/algo/blast/Makefile.in b/c++/src/algo/blast/Makefile.in
---- a/c++/src/algo/blast/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/algo/blast/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/algo/blast/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/algo/blast/Makefile.in	2026-07-22 09:10:05
 @@ -3,8 +3,7 @@
  # Meta-makefile ("BLAST" project)
  #################################
@@ -25,8 +25,8 @@ diff -ru a/c++/src/algo/blast/Makefile.in b/c++/src/algo/blast/Makefile.in
  WATCHERS = camacho fongah2
  
 diff -ru a/c++/src/algo/blast/blastinput/Makefile.in b/c++/src/algo/blast/blastinput/Makefile.in
---- a/c++/src/algo/blast/blastinput/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/algo/blast/blastinput/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/algo/blast/blastinput/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/algo/blast/blastinput/Makefile.in	2026-07-22 09:10:05
 @@ -5,7 +5,7 @@
  
  
@@ -37,8 +37,8 @@ diff -ru a/c++/src/algo/blast/blastinput/Makefile.in b/c++/src/algo/blast/blasti
  REQUIRES = SQLITE3
  #EXPENDABLE_SUB_PROJ = demo
 diff -ru a/c++/src/app/Makefile.in b/c++/src/app/Makefile.in
---- a/c++/src/app/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/app/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/app/Makefile.in	2026-07-22 09:09:59
++++ b/c++/src/app/Makefile.in	2026-07-22 09:10:05
 @@ -3,21 +3,9 @@
  # Miscellaneous applications
  #################################
@@ -63,9 +63,23 @@ diff -ru a/c++/src/app/Makefile.in b/c++/src/app/Makefile.in
  
  REQUIRES = app
  
+diff -ru a/c++/src/build-system/Makefile.top_builddir.in b/c++/src/build-system/Makefile.top_builddir.in
+--- a/c++/src/build-system/Makefile.top_builddir.in	2026-07-22 09:10:01
++++ b/c++/src/build-system/Makefile.top_builddir.in	2026-07-22 09:10:05
+@@ -11,9 +11,7 @@
+ #################################
+ 
+ 
+-SUB_PROJ = corelib util connect cgi html build-system \
+-           serial db dbapi objects objmgr objtools ctools \
+-           sra algo misc gui app sample internal
++SUB_PROJ = corelib util connect cgi html build-system serial db dbapi objects objmgr objtools sra algo misc app
+ 
+ EXPENDABLE_SUB_PROJ = @check@
+ 
 diff -ru a/c++/src/cgi/Makefile.in b/c++/src/cgi/Makefile.in
---- a/c++/src/cgi/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/cgi/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/cgi/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/cgi/Makefile.in	2026-07-22 09:10:05
 @@ -7,7 +7,7 @@
  #################################
  
@@ -76,8 +90,8 @@ diff -ru a/c++/src/cgi/Makefile.in b/c++/src/cgi/Makefile.in
  
  srcdir = @srcdir@
 diff -ru a/c++/src/connect/Makefile.in b/c++/src/connect/Makefile.in
---- a/c++/src/connect/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/connect/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/connect/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/connect/Makefile.in	2026-07-22 09:10:05
 @@ -10,7 +10,7 @@
  #################################
  
@@ -88,8 +102,8 @@ diff -ru a/c++/src/connect/Makefile.in b/c++/src/connect/Makefile.in
  WATCHERS = lavr
  
 diff -ru a/c++/src/connect/ext/Makefile.in b/c++/src/connect/ext/Makefile.in
---- a/c++/src/connect/ext/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/connect/ext/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/connect/ext/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/connect/ext/Makefile.in	2026-07-22 09:10:05
 @@ -5,7 +5,7 @@
  #################################
  
@@ -100,8 +114,8 @@ diff -ru a/c++/src/connect/ext/Makefile.in b/c++/src/connect/ext/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/connect/services/Makefile.in b/c++/src/connect/services/Makefile.in
---- a/c++/src/connect/services/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/connect/services/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/connect/services/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/connect/services/Makefile.in	2026-07-22 09:10:05
 @@ -10,7 +10,7 @@
  #################################
  
@@ -112,8 +126,8 @@ diff -ru a/c++/src/connect/services/Makefile.in b/c++/src/connect/services/Makef
  
  srcdir = @srcdir@
 diff -ru a/c++/src/corelib/Makefile.in b/c++/src/corelib/Makefile.in
---- a/c++/src/corelib/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/corelib/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/corelib/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/corelib/Makefile.in	2026-07-22 09:10:05
 @@ -8,7 +8,7 @@
  
  USR_PROJ = precompile
@@ -124,8 +138,8 @@ diff -ru a/c++/src/corelib/Makefile.in b/c++/src/corelib/Makefile.in
  
  EXTRA_CONFIGURABLES = Makefile.precompile ncbicfg.c
 diff -ru a/c++/src/db/Makefile.in b/c++/src/db/Makefile.in
---- a/c++/src/db/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/db/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/db/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/db/Makefile.in	2026-07-22 09:10:05
 @@ -6,7 +6,7 @@
  # Meta-makefile for db code
  #################################
@@ -136,8 +150,8 @@ diff -ru a/c++/src/db/Makefile.in b/c++/src/db/Makefile.in
  
  srcdir = @srcdir@
 diff -ru a/c++/src/dbapi/Makefile.in b/c++/src/dbapi/Makefile.in
---- a/c++/src/dbapi/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/dbapi/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/dbapi/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/dbapi/Makefile.in	2026-07-22 09:10:05
 @@ -1,6 +1,6 @@
  # $Id: Makefile.in 605238 2020-04-08 14:16:56Z vakatov $
  
@@ -147,8 +161,8 @@ diff -ru a/c++/src/dbapi/Makefile.in b/c++/src/dbapi/Makefile.in
  
  REQUIRES = dbapi
 diff -ru a/c++/src/dbapi/driver/Makefile.in b/c++/src/dbapi/driver/Makefile.in
---- a/c++/src/dbapi/driver/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/dbapi/driver/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/dbapi/driver/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/dbapi/driver/Makefile.in	2026-07-22 09:10:05
 @@ -1,7 +1,7 @@
  # $Id: Makefile.in 681423 2024-04-09 14:51:33Z ucko $
  
@@ -159,8 +173,8 @@ diff -ru a/c++/src/dbapi/driver/Makefile.in b/c++/src/dbapi/driver/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/dbapi/driver/odbc/Makefile.in b/c++/src/dbapi/driver/odbc/Makefile.in
---- a/c++/src/dbapi/driver/odbc/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/dbapi/driver/odbc/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/dbapi/driver/odbc/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/dbapi/driver/odbc/Makefile.in	2026-07-22 09:10:05
 @@ -1,7 +1,7 @@
  # $Id: Makefile.in 122772 2008-03-25 18:17:57Z ssikorsk $
  
@@ -171,8 +185,8 @@ diff -ru a/c++/src/dbapi/driver/odbc/Makefile.in b/c++/src/dbapi/driver/odbc/Mak
  REQUIRES = ODBC
  
 diff -ru a/c++/src/html/Makefile.in b/c++/src/html/Makefile.in
---- a/c++/src/html/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/html/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/html/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/html/Makefile.in	2026-07-22 09:10:05
 @@ -6,7 +6,7 @@
  #################################
  
@@ -183,8 +197,8 @@ diff -ru a/c++/src/html/Makefile.in b/c++/src/html/Makefile.in
  
  srcdir = @srcdir@
 diff -ru a/c++/src/misc/Makefile.in b/c++/src/misc/Makefile.in
---- a/c++/src/misc/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/misc/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/misc/Makefile.in	2026-07-22 09:09:59
++++ b/c++/src/misc/Makefile.in	2026-07-22 09:10:05
 @@ -1,10 +1,7 @@
  # $Id: Makefile.in 640800 2021-11-18 14:24:05Z stakhovv $
  
@@ -199,8 +213,8 @@ diff -ru a/c++/src/misc/Makefile.in b/c++/src/misc/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objects/dbsnp/primary_track/Makefile.in b/c++/src/objects/dbsnp/primary_track/Makefile.in
---- a/c++/src/objects/dbsnp/primary_track/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/dbsnp/primary_track/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/dbsnp/primary_track/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objects/dbsnp/primary_track/Makefile.in	2026-07-22 09:10:05
 @@ -2,7 +2,7 @@
  
  PROTOBUF_PROJ = dbsnp
@@ -211,8 +225,8 @@ diff -ru a/c++/src/objects/dbsnp/primary_track/Makefile.in b/c++/src/objects/dbs
  REQUIRES = $(GRPC_OPT)
  
 diff -ru a/c++/src/objects/entrez2/Makefile.in b/c++/src/objects/entrez2/Makefile.in
---- a/c++/src/objects/entrez2/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/entrez2/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/entrez2/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/objects/entrez2/Makefile.in	2026-07-22 09:10:05
 @@ -1,5 +1,5 @@
  ASN_PROJ = entrez2
  LIB_PROJ = entrez2cli
@@ -221,8 +235,8 @@ diff -ru a/c++/src/objects/entrez2/Makefile.in b/c++/src/objects/entrez2/Makefil
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objects/entrezgene/Makefile.in b/c++/src/objects/entrezgene/Makefile.in
---- a/c++/src/objects/entrezgene/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/entrezgene/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/entrezgene/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/objects/entrezgene/Makefile.in	2026-07-22 09:10:05
 @@ -1,4 +1,4 @@
 -SUB_PROJ = unit_test
 +SUB_PROJ = 
@@ -230,8 +244,8 @@ diff -ru a/c++/src/objects/entrezgene/Makefile.in b/c++/src/objects/entrezgene/M
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objects/general/Makefile.in b/c++/src/objects/general/Makefile.in
---- a/c++/src/objects/general/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/general/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/general/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/objects/general/Makefile.in	2026-07-22 09:10:05
 @@ -1,4 +1,4 @@
 -SUB_PROJ = test unit_test
 +SUB_PROJ = 
@@ -239,8 +253,8 @@ diff -ru a/c++/src/objects/general/Makefile.in b/c++/src/objects/general/Makefil
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objects/id1/Makefile.in b/c++/src/objects/id1/Makefile.in
---- a/c++/src/objects/id1/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/id1/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/id1/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/objects/id1/Makefile.in	2026-07-22 09:10:05
 @@ -1,5 +1,5 @@
  ASN_PROJ = id1
  LIB_PROJ = id1cli
@@ -249,8 +263,8 @@ diff -ru a/c++/src/objects/id1/Makefile.in b/c++/src/objects/id1/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objects/macro/Makefile.in b/c++/src/objects/macro/Makefile.in
---- a/c++/src/objects/macro/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/macro/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/macro/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/objects/macro/Makefile.in	2026-07-22 09:10:05
 @@ -1,7 +1,7 @@
  # $Id: Makefile.in 449388 2014-10-16 14:55:16Z bollin $
  
@@ -261,8 +275,8 @@ diff -ru a/c++/src/objects/macro/Makefile.in b/c++/src/objects/macro/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objects/ncbimime/Makefile.in b/c++/src/objects/ncbimime/Makefile.in
---- a/c++/src/objects/ncbimime/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/ncbimime/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/ncbimime/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/objects/ncbimime/Makefile.in	2026-07-22 09:10:05
 @@ -1,4 +1,4 @@
  ASN_PROJ = ncbimime
 -SUB_PROJ = test
@@ -270,8 +284,8 @@ diff -ru a/c++/src/objects/ncbimime/Makefile.in b/c++/src/objects/ncbimime/Makef
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objects/seq/Makefile.in b/c++/src/objects/seq/Makefile.in
---- a/c++/src/objects/seq/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/seq/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/seq/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/objects/seq/Makefile.in	2026-07-22 09:10:05
 @@ -2,7 +2,7 @@
  
  USR_PROJ = sources
@@ -282,8 +296,8 @@ diff -ru a/c++/src/objects/seq/Makefile.in b/c++/src/objects/seq/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objects/seqset/Makefile.in b/c++/src/objects/seqset/Makefile.in
---- a/c++/src/objects/seqset/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objects/seqset/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objects/seqset/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/objects/seqset/Makefile.in	2026-07-22 09:10:05
 @@ -1,4 +1,4 @@
  ASN_PROJ = seqset
 -SUB_PROJ = test
@@ -291,8 +305,8 @@ diff -ru a/c++/src/objects/seqset/Makefile.in b/c++/src/objects/seqset/Makefile.
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objmgr/Makefile.in b/c++/src/objmgr/Makefile.in
---- a/c++/src/objmgr/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objmgr/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objmgr/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objmgr/Makefile.in	2026-07-22 09:10:05
 @@ -3,7 +3,7 @@
  REQUIRES = objects
  
@@ -303,8 +317,8 @@ diff -ru a/c++/src/objmgr/Makefile.in b/c++/src/objmgr/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objmgr/util/Makefile.in b/c++/src/objmgr/util/Makefile.in
---- a/c++/src/objmgr/util/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objmgr/util/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objmgr/util/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objmgr/util/Makefile.in	2026-07-22 09:10:05
 @@ -4,7 +4,7 @@
  ##################################
  
@@ -315,8 +329,8 @@ diff -ru a/c++/src/objmgr/util/Makefile.in b/c++/src/objmgr/util/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/Makefile.in b/c++/src/objtools/Makefile.in
---- a/c++/src/objtools/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/Makefile.in	2026-07-22 09:10:05
 @@ -5,13 +5,7 @@
  
  REQUIRES = objects
@@ -333,8 +347,8 @@ diff -ru a/c++/src/objtools/Makefile.in b/c++/src/objtools/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/alnmgr/Makefile.in b/c++/src/objtools/alnmgr/Makefile.in
---- a/c++/src/objtools/alnmgr/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/alnmgr/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/alnmgr/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/alnmgr/Makefile.in	2026-07-22 09:10:05
 @@ -1,7 +1,7 @@
  # $Id: Makefile.in 502200 2016-05-23 14:42:40Z vakatov $
  
@@ -345,8 +359,8 @@ diff -ru a/c++/src/objtools/alnmgr/Makefile.in b/c++/src/objtools/alnmgr/Makefil
  WATCHERS = grichenk
  
 diff -ru a/c++/src/objtools/cleanup/Makefile.in b/c++/src/objtools/cleanup/Makefile.in
---- a/c++/src/objtools/cleanup/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/cleanup/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/cleanup/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/cleanup/Makefile.in	2026-07-22 09:10:05
 @@ -5,7 +5,7 @@
  
  LIB_PROJ = cleanup
@@ -357,8 +371,8 @@ diff -ru a/c++/src/objtools/cleanup/Makefile.in b/c++/src/objtools/cleanup/Makef
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/data_loaders/Makefile.in b/c++/src/objtools/data_loaders/Makefile.in
---- a/c++/src/objtools/data_loaders/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/data_loaders/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/data_loaders/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/data_loaders/Makefile.in	2026-07-22 09:10:05
 @@ -1,6 +1,6 @@
  # $Id: Makefile.in 590229 2019-07-25 16:22:30Z grichenk $
  
@@ -368,8 +382,8 @@ diff -ru a/c++/src/objtools/data_loaders/Makefile.in b/c++/src/objtools/data_loa
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/data_loaders/blastdb/Makefile.in b/c++/src/objtools/data_loaders/blastdb/Makefile.in
---- a/c++/src/objtools/data_loaders/blastdb/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/data_loaders/blastdb/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/data_loaders/blastdb/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/data_loaders/blastdb/Makefile.in	2026-07-22 09:10:05
 @@ -4,7 +4,7 @@
  ##################################
  
@@ -380,8 +394,8 @@ diff -ru a/c++/src/objtools/data_loaders/blastdb/Makefile.in b/c++/src/objtools/
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/data_loaders/genbank/Makefile.in b/c++/src/objtools/data_loaders/genbank/Makefile.in
---- a/c++/src/objtools/data_loaders/genbank/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/data_loaders/genbank/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/data_loaders/genbank/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/data_loaders/genbank/Makefile.in	2026-07-22 09:10:05
 @@ -1,6 +1,6 @@
  # $Id: Makefile.in 556102 2018-01-25 22:09:47Z sadyrovr $
  
@@ -391,8 +405,8 @@ diff -ru a/c++/src/objtools/data_loaders/genbank/Makefile.in b/c++/src/objtools/
  LIB_PROJ = ncbi_xreader ncbi_xloader_genbank
  
 diff -ru a/c++/src/objtools/edit/Makefile.in b/c++/src/objtools/edit/Makefile.in
---- a/c++/src/objtools/edit/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/edit/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/edit/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/edit/Makefile.in	2026-07-22 09:10:05
 @@ -4,7 +4,7 @@
  ##################################
  
@@ -403,8 +417,8 @@ diff -ru a/c++/src/objtools/edit/Makefile.in b/c++/src/objtools/edit/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/eutils/Makefile.in b/c++/src/objtools/eutils/Makefile.in
---- a/c++/src/objtools/eutils/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/eutils/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/eutils/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/eutils/Makefile.in	2026-07-22 09:10:05
 @@ -3,8 +3,7 @@
  # Meta-makefile("eutils" project)
  #################################
@@ -416,8 +430,8 @@ diff -ru a/c++/src/objtools/eutils/Makefile.in b/c++/src/objtools/eutils/Makefil
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/eutils/efetch/Makefile.in b/c++/src/objtools/eutils/efetch/Makefile.in
---- a/c++/src/objtools/eutils/efetch/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/eutils/efetch/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/eutils/efetch/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/eutils/efetch/Makefile.in	2026-07-22 09:10:05
 @@ -2,7 +2,7 @@
  
  XSD_PROJ = efetch
@@ -428,8 +442,8 @@ diff -ru a/c++/src/objtools/eutils/efetch/Makefile.in b/c++/src/objtools/eutils/
  REQUIRES = -Cygwin
  
 diff -ru a/c++/src/objtools/format/Makefile.in b/c++/src/objtools/format/Makefile.in
---- a/c++/src/objtools/format/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/format/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/format/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/format/Makefile.in	2026-07-22 09:10:05
 @@ -5,7 +5,7 @@
  
  LIB_PROJ = xformat
@@ -440,8 +454,8 @@ diff -ru a/c++/src/objtools/format/Makefile.in b/c++/src/objtools/format/Makefil
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/pubseq_gateway/Makefile.in b/c++/src/objtools/pubseq_gateway/Makefile.in
---- a/c++/src/objtools/pubseq_gateway/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/pubseq_gateway/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/pubseq_gateway/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/pubseq_gateway/Makefile.in	2026-07-22 09:10:05
 @@ -1,7 +1,7 @@
  # $Id: Makefile.in 672565 2023-09-11 15:49:57Z saprykin $
  
@@ -453,8 +467,8 @@ diff -ru a/c++/src/objtools/pubseq_gateway/Makefile.in b/c++/src/objtools/pubseq
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/readers/Makefile.in b/c++/src/objtools/readers/Makefile.in
---- a/c++/src/objtools/readers/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/readers/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/readers/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/readers/Makefile.in	2026-07-22 09:10:05
 @@ -4,7 +4,7 @@
  ############################################
  
@@ -465,8 +479,8 @@ diff -ru a/c++/src/objtools/readers/Makefile.in b/c++/src/objtools/readers/Makef
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/objtools/seqmasks_io/Makefile.in b/c++/src/objtools/seqmasks_io/Makefile.in
---- a/c++/src/objtools/seqmasks_io/Makefile.in	2026-07-22 02:41:30
-+++ b/c++/src/objtools/seqmasks_io/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/objtools/seqmasks_io/Makefile.in	2026-07-22 09:10:01
++++ b/c++/src/objtools/seqmasks_io/Makefile.in	2026-07-22 09:10:05
 @@ -1,7 +1,7 @@
  # $Id: Makefile.in 389851 2013-02-21 13:46:12Z camacho $
  
@@ -477,8 +491,8 @@ diff -ru a/c++/src/objtools/seqmasks_io/Makefile.in b/c++/src/objtools/seqmasks_
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/serial/Makefile.in b/c++/src/serial/Makefile.in
---- a/c++/src/serial/Makefile.in	2026-07-22 02:41:31
-+++ b/c++/src/serial/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/serial/Makefile.in	2026-07-22 09:10:02
++++ b/c++/src/serial/Makefile.in	2026-07-22 09:10:05
 @@ -4,7 +4,7 @@
  #################################
  
@@ -489,8 +503,8 @@ diff -ru a/c++/src/serial/Makefile.in b/c++/src/serial/Makefile.in
  
  REQUIRES = serial
 diff -ru a/c++/src/sra/Makefile.in b/c++/src/sra/Makefile.in
---- a/c++/src/sra/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/sra/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/sra/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/sra/Makefile.in	2026-07-22 09:10:05
 @@ -1,6 +1,6 @@
  # $Id: Makefile.in 491099 2016-02-01 21:06:06Z ucko $
  
@@ -500,8 +514,8 @@ diff -ru a/c++/src/sra/Makefile.in b/c++/src/sra/Makefile.in
  WATCHERS = vasilche ucko
  
 diff -ru a/c++/src/sra/data_loaders/snp/Makefile.in b/c++/src/sra/data_loaders/snp/Makefile.in
---- a/c++/src/sra/data_loaders/snp/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/sra/data_loaders/snp/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/sra/data_loaders/snp/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/sra/data_loaders/snp/Makefile.in	2026-07-22 09:10:05
 @@ -19,7 +19,7 @@
  # EXPENDABLE_APP_PROJ =
  
@@ -512,8 +526,8 @@ diff -ru a/c++/src/sra/data_loaders/snp/Makefile.in b/c++/src/sra/data_loaders/s
  # EXPENDABLE_SUB_PROJ =
  
 diff -ru a/c++/src/sra/data_loaders/wgs/Makefile.in b/c++/src/sra/data_loaders/wgs/Makefile.in
---- a/c++/src/sra/data_loaders/wgs/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/sra/data_loaders/wgs/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/sra/data_loaders/wgs/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/sra/data_loaders/wgs/Makefile.in	2026-07-22 09:10:05
 @@ -19,7 +19,7 @@
  # EXPENDABLE_APP_PROJ =
  
@@ -524,8 +538,8 @@ diff -ru a/c++/src/sra/data_loaders/wgs/Makefile.in b/c++/src/sra/data_loaders/w
  # EXPENDABLE_SUB_PROJ =
  
 diff -ru a/c++/src/sra/readers/bam/Makefile.in b/c++/src/sra/readers/bam/Makefile.in
---- a/c++/src/sra/readers/bam/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/sra/readers/bam/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/sra/readers/bam/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/sra/readers/bam/Makefile.in	2026-07-22 09:10:05
 @@ -19,7 +19,7 @@
  # EXPENDABLE_APP_PROJ =
  
@@ -536,8 +550,8 @@ diff -ru a/c++/src/sra/readers/bam/Makefile.in b/c++/src/sra/readers/bam/Makefil
  # EXPENDABLE_SUB_PROJ =
  
 diff -ru a/c++/src/sra/readers/sra/Makefile.in b/c++/src/sra/readers/sra/Makefile.in
---- a/c++/src/sra/readers/sra/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/sra/readers/sra/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/sra/readers/sra/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/sra/readers/sra/Makefile.in	2026-07-22 09:10:05
 @@ -19,7 +19,7 @@
  # EXPENDABLE_APP_PROJ =
  
@@ -548,8 +562,8 @@ diff -ru a/c++/src/sra/readers/sra/Makefile.in b/c++/src/sra/readers/sra/Makefil
  # EXPENDABLE_SUB_PROJ =
  
 diff -ru a/c++/src/util/Makefile.in b/c++/src/util/Makefile.in
---- a/c++/src/util/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/util/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/util/Makefile.in	2026-07-22 09:10:00
++++ b/c++/src/util/Makefile.in	2026-07-22 09:10:05
 @@ -4,7 +4,7 @@
  #################################
  
@@ -560,8 +574,8 @@ diff -ru a/c++/src/util/Makefile.in b/c++/src/util/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/util/bitset/Makefile.in b/c++/src/util/bitset/Makefile.in
---- a/c++/src/util/bitset/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/util/bitset/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/util/bitset/Makefile.in	2026-07-22 09:09:59
++++ b/c++/src/util/bitset/Makefile.in	2026-07-22 09:10:05
 @@ -1,6 +1,6 @@
  # $Id: Makefile.in 85718 2006-07-10 20:10:11Z kuznets $
  
@@ -571,8 +585,8 @@ diff -ru a/c++/src/util/bitset/Makefile.in b/c++/src/util/bitset/Makefile.in
  srcdir = @srcdir@
  include @builddir@/Makefile.meta
 diff -ru a/c++/src/util/tables/Makefile.in b/c++/src/util/tables/Makefile.in
---- a/c++/src/util/tables/Makefile.in	2026-07-22 02:41:29
-+++ b/c++/src/util/tables/Makefile.in	2026-07-22 02:41:35
+--- a/c++/src/util/tables/Makefile.in	2026-07-22 09:09:59
++++ b/c++/src/util/tables/Makefile.in	2026-07-22 09:10:05
 @@ -1,7 +1,7 @@
  # $Id: Makefile.in 173670 2009-10-20 15:45:31Z gouriano $
  

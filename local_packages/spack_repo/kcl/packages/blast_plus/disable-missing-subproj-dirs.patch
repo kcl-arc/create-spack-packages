@@ -1,0 +1,584 @@
+diff -ru a/c++/src/algo/Makefile.in b/c++/src/algo/Makefile.in
+--- a/c++/src/algo/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/algo/Makefile.in	2026-07-22 02:41:35
+@@ -3,8 +3,7 @@
+ # Meta-makefile("ALGO" project)
+ #################################
+ 
+-SUB_PROJ = dustmask winmask sequence blast segmask align structure gnomon \
+-           tree phy_tree seqqa cobalt text volume_merge primer id_mapper
++SUB_PROJ = dustmask winmask blast segmask
+ 
+ REQUIRES = objects algo
+ 
+diff -ru a/c++/src/algo/blast/Makefile.in b/c++/src/algo/blast/Makefile.in
+--- a/c++/src/algo/blast/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/algo/blast/Makefile.in	2026-07-22 02:41:35
+@@ -3,8 +3,7 @@
+ # Meta-makefile ("BLAST" project)
+ #################################
+ 
+-SUB_PROJ = composition_adjustment core dbindex dbindex_search api proteinkmer \
+-           format blastinput blast_sra_input igblast gumbel_params vdb unit_tests
++SUB_PROJ = composition_adjustment core dbindex api proteinkmer format blastinput igblast vdb unit_tests
+ 
+ WATCHERS = camacho fongah2
+ 
+diff -ru a/c++/src/algo/blast/blastinput/Makefile.in b/c++/src/algo/blast/blastinput/Makefile.in
+--- a/c++/src/algo/blast/blastinput/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/algo/blast/blastinput/Makefile.in	2026-07-22 02:41:35
+@@ -5,7 +5,7 @@
+ 
+ 
+ LIB_PROJ = blastinput
+-SUB_PROJ = unit_test demo
++SUB_PROJ = unit_test
+ 
+ REQUIRES = SQLITE3
+ #EXPENDABLE_SUB_PROJ = demo
+diff -ru a/c++/src/app/Makefile.in b/c++/src/app/Makefile.in
+--- a/c++/src/app/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/app/Makefile.in	2026-07-22 02:41:35
+@@ -3,21 +3,9 @@
+ # Miscellaneous applications
+ #################################
+ 
+-SUB_PROJ = asn2asn asn2fasta asn2flat flat2asn asnval asn_cleanup \
+-           id1_fetch blast convert_seq \
+-           nmer_repeats objmgr gi2taxid netschedule grid netstorage igblast \
+-           winmasker dustmasker segmasker blastdb blastvdb vecscreen \
+-           agpconvert id2_fetch agp_validate objextract \
+-           bdb_env_keeper nw_aligner speedtest idmapper formatguess \
+-           multireader read_blast_result splign hfilter \
+-           annotwriter compart streamtest lds2_indexer \
+-           discrepancy_report biosample_chk bsdiff gap_stats table2asn \
+-           srcchk tableval ncbi_encrypt ssub_fork asn_cache magicblast \
+-           multipattern prt2fsm \
+-           pub_report gff_deconcat sub_fuse \
+-           feat_import
++SUB_PROJ = blast winmasker dustmasker segmasker blastdb blastvdb
+ 
+-EXPENDABLE_SUB_PROJ = split_cache wig2table netcache rmblastn dblb tls idfetch pubseq_gateway
++EXPENDABLE_SUB_PROJ = 
+ 
+ REQUIRES = app
+ 
+diff -ru a/c++/src/cgi/Makefile.in b/c++/src/cgi/Makefile.in
+--- a/c++/src/cgi/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/cgi/Makefile.in	2026-07-22 02:41:35
+@@ -7,7 +7,7 @@
+ #################################
+ 
+ LIB_PROJ = cgi fcgi fcgi_mt
+-SUB_PROJ = test
++SUB_PROJ = 
+ PROJ_TAG = web
+ 
+ srcdir = @srcdir@
+diff -ru a/c++/src/connect/Makefile.in b/c++/src/connect/Makefile.in
+--- a/c++/src/connect/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/connect/Makefile.in	2026-07-22 02:41:35
+@@ -10,7 +10,7 @@
+ #################################
+ 
+ LIB_PROJ = connssl connect xxconnect xconnect xxconnect2 xthrserv xconnsftp
+-SUB_PROJ = services ext test
++SUB_PROJ = services ext
+ 
+ WATCHERS = lavr
+ 
+diff -ru a/c++/src/connect/ext/Makefile.in b/c++/src/connect/ext/Makefile.in
+--- a/c++/src/connect/ext/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/connect/ext/Makefile.in	2026-07-22 02:41:35
+@@ -5,7 +5,7 @@
+ #################################
+ 
+ LIB_PROJ = connext xconnext
+-SUB_PROJ = test
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/connect/services/Makefile.in b/c++/src/connect/services/Makefile.in
+--- a/c++/src/connect/services/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/connect/services/Makefile.in	2026-07-22 02:41:35
+@@ -10,7 +10,7 @@
+ #################################
+ 
+ LIB_PROJ = xconnserv ncbi_xcache_netcache ncbi_xblobstorage_netcache
+-SUB_PROJ = test
++SUB_PROJ = 
+ PROJ_TAG = grid
+ 
+ srcdir = @srcdir@
+diff -ru a/c++/src/corelib/Makefile.in b/c++/src/corelib/Makefile.in
+--- a/c++/src/corelib/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/corelib/Makefile.in	2026-07-22 02:41:35
+@@ -8,7 +8,7 @@
+ 
+ USR_PROJ = precompile
+ LIB_PROJ = corelib test_mt test_boost
+-SUB_PROJ = test jaeger opentelemetry
++SUB_PROJ = 
+ PROJ_TAG = core
+ 
+ EXTRA_CONFIGURABLES = Makefile.precompile ncbicfg.c
+diff -ru a/c++/src/db/Makefile.in b/c++/src/db/Makefile.in
+--- a/c++/src/db/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/db/Makefile.in	2026-07-22 02:41:35
+@@ -6,7 +6,7 @@
+ # Meta-makefile for db code
+ #################################
+ 
+-SUB_PROJ = sqlite bdb
++SUB_PROJ = sqlite
+ 
+ 
+ srcdir = @srcdir@
+diff -ru a/c++/src/dbapi/Makefile.in b/c++/src/dbapi/Makefile.in
+--- a/c++/src/dbapi/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/dbapi/Makefile.in	2026-07-22 02:41:35
+@@ -1,6 +1,6 @@
+ # $Id: Makefile.in 605238 2020-04-08 14:16:56Z vakatov $
+ 
+-SUB_PROJ = driver simple lang_bind test
++SUB_PROJ = driver
+ LIB_PROJ = dbapi
+ 
+ REQUIRES = dbapi
+diff -ru a/c++/src/dbapi/driver/Makefile.in b/c++/src/dbapi/driver/Makefile.in
+--- a/c++/src/dbapi/driver/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/dbapi/driver/Makefile.in	2026-07-22 02:41:35
+@@ -1,7 +1,7 @@
+ # $Id: Makefile.in 681423 2024-04-09 14:51:33Z ucko $
+ 
+ LIB_PROJ = dbapi_driver
+-SUB_PROJ = util ctlib ftds100 ftds14 ftds-default mysql odbc samples
++SUB_PROJ = odbc
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/dbapi/driver/odbc/Makefile.in b/c++/src/dbapi/driver/odbc/Makefile.in
+--- a/c++/src/dbapi/driver/odbc/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/dbapi/driver/odbc/Makefile.in	2026-07-22 02:41:35
+@@ -1,7 +1,7 @@
+ # $Id: Makefile.in 122772 2008-03-25 18:17:57Z ssikorsk $
+ 
+ LIB_PROJ = ncbi_xdbapi_odbc
+-SUB_PROJ = samples
++SUB_PROJ = 
+ 
+ REQUIRES = ODBC
+ 
+diff -ru a/c++/src/html/Makefile.in b/c++/src/html/Makefile.in
+--- a/c++/src/html/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/html/Makefile.in	2026-07-22 02:41:35
+@@ -6,7 +6,7 @@
+ #################################
+ 
+ LIB_PROJ = html
+-SUB_PROJ = test demo
++SUB_PROJ = 
+ PROJ_TAG = web
+ 
+ srcdir = @srcdir@
+diff -ru a/c++/src/misc/Makefile.in b/c++/src/misc/Makefile.in
+--- a/c++/src/misc/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/misc/Makefile.in	2026-07-22 02:41:35
+@@ -1,10 +1,7 @@
+ # $Id: Makefile.in 640800 2021-11-18 14:24:05Z stakhovv $
+ 
+-SUB_PROJ            = third_party third_party_static clog grid_cgi xmlwrapp \
+-                      eutils_client hydra_client discrepancy xmlreaders \
+-                      hgvs netstorage jsonwrapp biosample_util \
+-                      data_loaders_util lapackwrapp pmcidconv_client
+-EXPENDABLE_SUB_PROJ = cgi_redirect
++SUB_PROJ            = third_party third_party_static jsonwrapp
++EXPENDABLE_SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objects/dbsnp/primary_track/Makefile.in b/c++/src/objects/dbsnp/primary_track/Makefile.in
+--- a/c++/src/objects/dbsnp/primary_track/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/dbsnp/primary_track/Makefile.in	2026-07-22 02:41:35
+@@ -2,7 +2,7 @@
+ 
+ PROTOBUF_PROJ = dbsnp
+ LIB_PROJ = 
+-SUB_PROJ = test
++SUB_PROJ = 
+ 
+ REQUIRES = $(GRPC_OPT)
+ 
+diff -ru a/c++/src/objects/entrez2/Makefile.in b/c++/src/objects/entrez2/Makefile.in
+--- a/c++/src/objects/entrez2/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/entrez2/Makefile.in	2026-07-22 02:41:35
+@@ -1,5 +1,5 @@
+ ASN_PROJ = entrez2
+ LIB_PROJ = entrez2cli
+-SUB_PROJ = demo
++SUB_PROJ = 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objects/entrezgene/Makefile.in b/c++/src/objects/entrezgene/Makefile.in
+--- a/c++/src/objects/entrezgene/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/entrezgene/Makefile.in	2026-07-22 02:41:35
+@@ -1,4 +1,4 @@
+-SUB_PROJ = unit_test
++SUB_PROJ = 
+ ASN_PROJ = entrezgene
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objects/general/Makefile.in b/c++/src/objects/general/Makefile.in
+--- a/c++/src/objects/general/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/general/Makefile.in	2026-07-22 02:41:35
+@@ -1,4 +1,4 @@
+-SUB_PROJ = test unit_test
++SUB_PROJ = 
+ ASN_PROJ = general
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objects/id1/Makefile.in b/c++/src/objects/id1/Makefile.in
+--- a/c++/src/objects/id1/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/id1/Makefile.in	2026-07-22 02:41:35
+@@ -1,5 +1,5 @@
+ ASN_PROJ = id1
+ LIB_PROJ = id1cli
+-SUB_PROJ = test
++SUB_PROJ = 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objects/macro/Makefile.in b/c++/src/objects/macro/Makefile.in
+--- a/c++/src/objects/macro/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/macro/Makefile.in	2026-07-22 02:41:35
+@@ -1,7 +1,7 @@
+ # $Id: Makefile.in 449388 2014-10-16 14:55:16Z bollin $
+ 
+ ASN_PROJ = macro
+-SUB_PROJ = unit_test
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objects/ncbimime/Makefile.in b/c++/src/objects/ncbimime/Makefile.in
+--- a/c++/src/objects/ncbimime/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/ncbimime/Makefile.in	2026-07-22 02:41:35
+@@ -1,4 +1,4 @@
+ ASN_PROJ = ncbimime
+-SUB_PROJ = test
++SUB_PROJ = 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objects/seq/Makefile.in b/c++/src/objects/seq/Makefile.in
+--- a/c++/src/objects/seq/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/seq/Makefile.in	2026-07-22 02:41:35
+@@ -2,7 +2,7 @@
+ 
+ USR_PROJ = sources
+ ASN_PROJ = seq
+-SUB_PROJ = test unit_test
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objects/seqset/Makefile.in b/c++/src/objects/seqset/Makefile.in
+--- a/c++/src/objects/seqset/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objects/seqset/Makefile.in	2026-07-22 02:41:35
+@@ -1,4 +1,4 @@
+ ASN_PROJ = seqset
+-SUB_PROJ = test
++SUB_PROJ = 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objmgr/Makefile.in b/c++/src/objmgr/Makefile.in
+--- a/c++/src/objmgr/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objmgr/Makefile.in	2026-07-22 02:41:35
+@@ -3,7 +3,7 @@
+ REQUIRES = objects
+ 
+ LIB_PROJ = objmgr
+-SUB_PROJ = test util split
++SUB_PROJ = util split
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objmgr/util/Makefile.in b/c++/src/objmgr/util/Makefile.in
+--- a/c++/src/objmgr/util/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objmgr/util/Makefile.in	2026-07-22 02:41:35
+@@ -4,7 +4,7 @@
+ ##################################
+ 
+ LIB_PROJ = util
+-SUB_PROJ = unit_test
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/Makefile.in b/c++/src/objtools/Makefile.in
+--- a/c++/src/objtools/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/Makefile.in	2026-07-22 02:41:35
+@@ -5,13 +5,7 @@
+ 
+ REQUIRES = objects
+ 
+-SUB_PROJ = logging unit_test_util readers blast lds2 pubseq_gateway \
+-           data_loaders simple \
+-           alnmgr cddalignview test manip eutils edit cleanup format \
+-           huge_asn validator \
+-           asniotest align seqmasks_io \
+-           align_format snputil uudutil variation writers \
+-           import flatfile
++SUB_PROJ = logging readers blast pubseq_gateway data_loaders simple alnmgr eutils edit cleanup format seqmasks_io align_format
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/alnmgr/Makefile.in b/c++/src/objtools/alnmgr/Makefile.in
+--- a/c++/src/objtools/alnmgr/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/alnmgr/Makefile.in	2026-07-22 02:41:35
+@@ -1,7 +1,7 @@
+ # $Id: Makefile.in 502200 2016-05-23 14:42:40Z vakatov $
+ 
+ LIB_PROJ = alnmgr
+-SUB_PROJ = demo unit_test
++SUB_PROJ = 
+ 
+ WATCHERS = grichenk
+ 
+diff -ru a/c++/src/objtools/cleanup/Makefile.in b/c++/src/objtools/cleanup/Makefile.in
+--- a/c++/src/objtools/cleanup/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/cleanup/Makefile.in	2026-07-22 02:41:35
+@@ -5,7 +5,7 @@
+ 
+ LIB_PROJ = cleanup
+ 
+-SUB_PROJ = test
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/data_loaders/Makefile.in b/c++/src/objtools/data_loaders/Makefile.in
+--- a/c++/src/objtools/data_loaders/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/data_loaders/Makefile.in	2026-07-22 02:41:35
+@@ -1,6 +1,6 @@
+ # $Id: Makefile.in 590229 2019-07-25 16:22:30Z grichenk $
+ 
+-SUB_PROJ = genbank lds2 blastdb patcher asn_cache cdd
++SUB_PROJ = genbank blastdb
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/data_loaders/blastdb/Makefile.in b/c++/src/objtools/data_loaders/blastdb/Makefile.in
+--- a/c++/src/objtools/data_loaders/blastdb/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/data_loaders/blastdb/Makefile.in	2026-07-22 02:41:35
+@@ -4,7 +4,7 @@
+ ##################################
+ 
+ LIB_PROJ = ncbi_xloader_blastdb ncbi_xloader_blastdb_rmt
+-SUB_PROJ = unit_test
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/data_loaders/genbank/Makefile.in b/c++/src/objtools/data_loaders/genbank/Makefile.in
+--- a/c++/src/objtools/data_loaders/genbank/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/data_loaders/genbank/Makefile.in	2026-07-22 02:41:35
+@@ -1,6 +1,6 @@
+ # $Id: Makefile.in 556102 2018-01-25 22:09:47Z sadyrovr $
+ 
+-SUB_PROJ = cache pubseq id2 id1 pubseq2 gicache test
++SUB_PROJ = cache id2 id1 gicache
+ 
+ LIB_PROJ = ncbi_xreader ncbi_xloader_genbank
+ 
+diff -ru a/c++/src/objtools/edit/Makefile.in b/c++/src/objtools/edit/Makefile.in
+--- a/c++/src/objtools/edit/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/edit/Makefile.in	2026-07-22 02:41:35
+@@ -4,7 +4,7 @@
+ ##################################
+ 
+ LIB_PROJ = edit
+-SUB_PROJ = unit_test pubmed_fetch pubmed_citmatch test_remote_updater
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/eutils/Makefile.in b/c++/src/objtools/eutils/Makefile.in
+--- a/c++/src/objtools/eutils/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/eutils/Makefile.in	2026-07-22 02:41:35
+@@ -3,8 +3,7 @@
+ # Meta-makefile("eutils" project)
+ #################################
+ 
+-SUB_PROJ = egquery elink epost esearch espell esummary linkout einfo uilist \
+-           ehistory efetch api
++SUB_PROJ = egquery elink epost esearch espell esummary einfo uilist ehistory efetch api
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/eutils/efetch/Makefile.in b/c++/src/objtools/eutils/efetch/Makefile.in
+--- a/c++/src/objtools/eutils/efetch/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/eutils/efetch/Makefile.in	2026-07-22 02:41:35
+@@ -2,7 +2,7 @@
+ 
+ XSD_PROJ = efetch
+ 
+-SUB_PROJ = test
++SUB_PROJ = 
+ 
+ REQUIRES = -Cygwin
+ 
+diff -ru a/c++/src/objtools/format/Makefile.in b/c++/src/objtools/format/Makefile.in
+--- a/c++/src/objtools/format/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/format/Makefile.in	2026-07-22 02:41:35
+@@ -5,7 +5,7 @@
+ 
+ LIB_PROJ = xformat
+ 
+-SUB_PROJ = test
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/pubseq_gateway/Makefile.in b/c++/src/objtools/pubseq_gateway/Makefile.in
+--- a/c++/src/objtools/pubseq_gateway/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/pubseq_gateway/Makefile.in	2026-07-22 02:41:35
+@@ -1,7 +1,7 @@
+ # $Id: Makefile.in 672565 2023-09-11 15:49:57Z saprykin $
+ 
+-SUB_PROJ = cassandra client protobuf cache ipg
+-EXPENDABLE_SUB_PROJ = myncbi
++SUB_PROJ = client
++EXPENDABLE_SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/readers/Makefile.in b/c++/src/objtools/readers/Makefile.in
+--- a/c++/src/objtools/readers/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/readers/Makefile.in	2026-07-22 02:41:35
+@@ -4,7 +4,7 @@
+ ############################################
+ 
+ LIB_PROJ = xobjread xobjreadex
+-SUB_PROJ = app test unit_test 
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/objtools/seqmasks_io/Makefile.in b/c++/src/objtools/seqmasks_io/Makefile.in
+--- a/c++/src/objtools/seqmasks_io/Makefile.in	2026-07-22 02:41:30
++++ b/c++/src/objtools/seqmasks_io/Makefile.in	2026-07-22 02:41:35
+@@ -1,7 +1,7 @@
+ # $Id: Makefile.in 389851 2013-02-21 13:46:12Z camacho $
+ 
+ LIB_PROJ = seqmasks_io
+-SUB_PROJ = unit_test
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/serial/Makefile.in b/c++/src/serial/Makefile.in
+--- a/c++/src/serial/Makefile.in	2026-07-22 02:41:31
++++ b/c++/src/serial/Makefile.in	2026-07-22 02:41:35
+@@ -4,7 +4,7 @@
+ #################################
+ 
+ LIB_PROJ = serial cserial
+-SUB_PROJ = datatool test soap grpc_integration
++SUB_PROJ = datatool grpc_integration
+ PROJ_TAG = core
+ 
+ REQUIRES = serial
+diff -ru a/c++/src/sra/Makefile.in b/c++/src/sra/Makefile.in
+--- a/c++/src/sra/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/sra/Makefile.in	2026-07-22 02:41:35
+@@ -1,6 +1,6 @@
+ # $Id: Makefile.in 491099 2016-02-01 21:06:06Z ucko $
+ 
+-SUB_PROJ = readers data_loaders app
++SUB_PROJ = readers data_loaders
+ 
+ WATCHERS = vasilche ucko
+ 
+diff -ru a/c++/src/sra/data_loaders/snp/Makefile.in b/c++/src/sra/data_loaders/snp/Makefile.in
+--- a/c++/src/sra/data_loaders/snp/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/sra/data_loaders/snp/Makefile.in	2026-07-22 02:41:35
+@@ -19,7 +19,7 @@
+ # EXPENDABLE_APP_PROJ =
+ 
+ ## Subdirectories to traverse.
+-SUB_PROJ = test
++SUB_PROJ = 
+ # POTENTIAL_SUB_PROJ =
+ # EXPENDABLE_SUB_PROJ =
+ 
+diff -ru a/c++/src/sra/data_loaders/wgs/Makefile.in b/c++/src/sra/data_loaders/wgs/Makefile.in
+--- a/c++/src/sra/data_loaders/wgs/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/sra/data_loaders/wgs/Makefile.in	2026-07-22 02:41:35
+@@ -19,7 +19,7 @@
+ # EXPENDABLE_APP_PROJ =
+ 
+ ## Subdirectories to traverse.
+-SUB_PROJ = test
++SUB_PROJ = 
+ # POTENTIAL_SUB_PROJ =
+ # EXPENDABLE_SUB_PROJ =
+ 
+diff -ru a/c++/src/sra/readers/bam/Makefile.in b/c++/src/sra/readers/bam/Makefile.in
+--- a/c++/src/sra/readers/bam/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/sra/readers/bam/Makefile.in	2026-07-22 02:41:35
+@@ -19,7 +19,7 @@
+ # EXPENDABLE_APP_PROJ =
+ 
+ ## Subdirectories to traverse.
+-SUB_PROJ = test
++SUB_PROJ = 
+ # POTENTIAL_SUB_PROJ =
+ # EXPENDABLE_SUB_PROJ =
+ 
+diff -ru a/c++/src/sra/readers/sra/Makefile.in b/c++/src/sra/readers/sra/Makefile.in
+--- a/c++/src/sra/readers/sra/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/sra/readers/sra/Makefile.in	2026-07-22 02:41:35
+@@ -19,7 +19,7 @@
+ # EXPENDABLE_APP_PROJ =
+ 
+ ## Subdirectories to traverse.
+-SUB_PROJ = test
++SUB_PROJ = 
+ # POTENTIAL_SUB_PROJ =
+ # EXPENDABLE_SUB_PROJ =
+ 
+diff -ru a/c++/src/util/Makefile.in b/c++/src/util/Makefile.in
+--- a/c++/src/util/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/util/Makefile.in	2026-07-22 02:41:35
+@@ -4,7 +4,7 @@
+ #################################
+ 
+ LIB_PROJ = util
+-SUB_PROJ = regexp xregexp compress diff image tables sequtil bitset qparse lmdb lmdbxx test demo profile
++SUB_PROJ = regexp xregexp compress tables sequtil bitset lmdb lmdbxx profile
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/util/bitset/Makefile.in b/c++/src/util/bitset/Makefile.in
+--- a/c++/src/util/bitset/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/util/bitset/Makefile.in	2026-07-22 02:41:35
+@@ -1,6 +1,6 @@
+ # $Id: Makefile.in 85718 2006-07-10 20:10:11Z kuznets $
+ 
+-SUB_PROJ = test demo
++SUB_PROJ = 
+ 
+ srcdir = @srcdir@
+ include @builddir@/Makefile.meta
+diff -ru a/c++/src/util/tables/Makefile.in b/c++/src/util/tables/Makefile.in
+--- a/c++/src/util/tables/Makefile.in	2026-07-22 02:41:29
++++ b/c++/src/util/tables/Makefile.in	2026-07-22 02:41:35
+@@ -1,7 +1,7 @@
+ # $Id: Makefile.in 173670 2009-10-20 15:45:31Z gouriano $
+ 
+ LIB_PROJ = tables
+-SUB_PROJ = test
++SUB_PROJ = 
+ PROJ_TAG = core
+ 
+ srcdir = @srcdir@

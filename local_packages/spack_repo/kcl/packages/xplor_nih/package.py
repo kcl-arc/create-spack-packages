@@ -19,7 +19,7 @@ class XplorNih(Package):
     https://spack.readthedocs.io/en/latest/mirrors.html"""
 
     homepage = "https://nmr.cit.nih.gov/xplor-nih/"
-    # manual_download = True
+    manual_download = True
 
     version("3.11.1", md5="7be143d87a3405ae56c9cc6f59228b9b")
     version("3.8", md5="9cd295cadb3843651a5819125b63b31a")

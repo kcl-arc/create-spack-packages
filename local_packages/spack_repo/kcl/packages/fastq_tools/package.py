@@ -28,7 +28,7 @@ class FastqTools(AutotoolsPackage):
     depends_on("libtool", type="build")
     depends_on("m4", type="build")
     depends_on('pcre')
-    depends_on('zlib')
+    depends_on('zlib-api')
 
 
     def autoreconf(self, spec, prefix):

@@ -30,6 +30,10 @@ class FastqTools(AutotoolsPackage):
     depends_on('pcre')
     depends_on('zlib-api')
 
+    def setup_build_environment(self, env):
+        zlib_prefix = self.spec["zlib-api"].prefix
+        env.append_flags("CPPFLAGS", "-I{0}".format(zlib_prefix.include))
+        env.append_flags("LDFLAGS", "-L{0}".format(zlib_prefix.lib))
 
     def autoreconf(self, spec, prefix):
         autoreconf("--install", "--verbose")

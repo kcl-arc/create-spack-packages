@@ -34,6 +34,7 @@ class FastqTools(AutotoolsPackage):
         zlib_prefix = self.spec["zlib-api"].prefix
         env.append_flags("CPPFLAGS", "-I{0}".format(zlib_prefix.include))
         env.append_flags("LDFLAGS", "-L{0}".format(zlib_prefix.lib))
+        env.append_flags("CFLAGS", "-D_GNU_SOURCE")
 
     def autoreconf(self, spec, prefix):
         autoreconf("--install", "--verbose")

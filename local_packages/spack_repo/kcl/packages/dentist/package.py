@@ -39,13 +39,13 @@ class Dentist(Package):
 
 
     def url_for_version(self, version):
-        return "file:///software/local_software/DENTIST/DENTIST.{0}.gz".format(version)
+        return "file:///software/local_software/DENTIST/DENTIST_{0}.gz".format(version)
 
     @run_before("install")
     def fix_filename(self):
         version = str(self.spec.version)
         with working_dir(self.stage.source_path):
-            os.rename("DENTIST.{0}".format(version), "DENTIST")
+            os.rename("DENTIST_{0}".format(version), "DENTIST")
             os.chmod("DENTIST", 0o775)
 
     def install(self, spec, prefix):

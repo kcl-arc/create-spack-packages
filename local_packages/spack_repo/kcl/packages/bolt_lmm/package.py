@@ -59,6 +59,7 @@ class BoltLmm(MakefilePackage):
             r"LLAPACK = -llapack -lgfortran",
             "LLAPACK = -L{0} -lopenblas -lgfortran".format(spec["openblas"].prefix.lib)
         )
+        makefile.filter(r"-std=c\+\+11", "-std=c++14")
         makefile.filter(r"INTELROOT\s*=.*", "INTELROOT =")
         makefile.filter(r"MKLROOT\s*=.*", "MKLROOT =")
         makefile.filter(r"ZLIB_STATIC_DIR\s*=.*", "ZLIB_STATIC_DIR =")

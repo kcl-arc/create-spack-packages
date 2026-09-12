@@ -24,7 +24,7 @@ class Aretomo(Package):
 
     version(
         "1.3.4",
-        url="file:///software/local_software/aretomo/AreTomo_1.3.4_Feb222023.zip",
+        url="file:///software/local_software/aretomo/AreTomo_1.3.4_Feb22_2023.tgz",
         sha256="d331e4a1843fd8e457b6c58e3ab4255582673f024bfb0fae08cd54fc0c0c77e7",
     )
 

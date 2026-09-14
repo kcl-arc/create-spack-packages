@@ -26,7 +26,7 @@ class Cellranger(Package):
     version("10.0.0", sha256="5af205246be97ee0baed52d149f60b3730dc663acaf5ed738c2833d947689859")
     version("9.0.0", sha256="157002eee6a2b4abfb8b74fa74cb751a4c0543150812fc4bac982abc7cdcea88")
     version("8.0.0", sha256="a169e03d89bcbfd9193a3e11e289436b40441380a421032e1724591db61cd690")
-    version("7.2.0", sha256="3e9fac03cc33c81a10f6444963e87bf720b2fdee0565d0620f5a4bb47d62a7e3")
+    version("7.2.0", sha256="b092bd4e3ab585ad051a231fbdd8f3f0f5cbcd10f657eeab86bec98cd594502c")
 
     # cellranger is distributed as precompiled binaries that are not compatible with
     # processors without the avx instruction set ...

@@ -2,6 +2,7 @@
 #
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 
+from marshal import version
 import os
 import platform
 import sys
@@ -18,7 +19,6 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
     high-performance simulation of large biomolecular systems."""
 
     homepage = "https://www.ks.uiuc.edu/Research/namd/"
-    url = "file:///software/local_software/namd/NAMD_2.14_Source.tar.gz"
     git = "https://charm.cs.illinois.edu/gerrit/namd.git"
     manual_download = True
     redistribute(source=False, binary=False)
@@ -113,6 +113,9 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
     # https://www.ks.uiuc.edu/Research/namd/2.14/features.html
     depends_on("cuda@6.5.14:7.5.18", when="@2.12 +cuda")
     depends_on("cuda@8.0.61:", when="@2.13: +cuda")
+
+    def url_for_version(self, version):
+        return "file:///software/local_software/namd/NAMD_{0}_Source.tar.gz".format(version)
 
     def _copy_arch_file(self, lib):
         config_filename = "arch/{0}.{1}".format(self.arch, lib)

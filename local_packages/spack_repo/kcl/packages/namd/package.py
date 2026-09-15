@@ -79,6 +79,12 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
     patch("namd-hiparch-override.patch", when="@3.0.2: +rocm")
     # Fix missing CudaLocalRecord::num_inline_peer symbol with C++11 HIP builds.
     patch("namd-cudalocalrecord-link-fix.patch", when="@3.0.2: +rocm")
+    # cudaDeviceProp::computeMode was removed from the CUDA Runtime API (still
+    # present through at least CUDA 12.x, gone by CUDA 13.3) -- replace the
+    # three reads with the still-supported cudaDeviceGetAttribute() equivalent.
+    # Not version-gated to a specific CUDA release: the attribute-query API is
+    # stable across versions, so this is safe for older CUDA toolkits too.
+    patch("namd-cuda13-computemode.patch", when="@3.0.2: +cuda")
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")

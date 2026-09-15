@@ -1,0 +1,39 @@
+--- a/src/DeviceCUDA.C
++++ b/src/DeviceCUDA.C
+@@ -185,7 +185,12 @@
+ #if CUDA_VERSION >= 2020 || defined(NAMD_HIP)
+       cudaDeviceProp deviceProp;
+       cudaCheck(cudaGetDeviceProperties(&deviceProp, dev));
+-      if ( deviceProp.computeMode != cudaComputeModeProhibited
++      // cudaDeviceProp::computeMode was removed from the CUDA Runtime API
++      // (still present through at least CUDA 12.x, gone by CUDA 13.3); query
++      // the same information through the still-supported attribute API.
++      int computeMode;
++      cudaCheck(cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, dev));
++      if ( computeMode != cudaComputeModeProhibited
+            && (deviceProp.major >= 3)
+            && deviceProp.canMapHostMemory
+            && ( (deviceProp.multiProcessorCount > 2) ||
+@@ -193,7 +198,7 @@
+          ) {
+         devices[ndevices++] = dev;
+       }
+-      if ( deviceProp.computeMode == cudaComputeModeExclusive ) {
++      if ( computeMode == cudaComputeModeExclusive ) {
+         ++nexclusive;
+       }
+ #else
+@@ -444,7 +449,12 @@
+     deviceID = dev;
+     cudaDeviceProp deviceProp;
+     cudaCheck(cudaGetDeviceProperties(&deviceProp, dev));
+-    if ( deviceProp.computeMode == cudaComputeModeProhibited )
++    // cudaDeviceProp::computeMode was removed from the CUDA Runtime API
++    // (still present through at least CUDA 12.x, gone by CUDA 13.3); query
++    // the same information through the still-supported attribute API.
++    int computeMode;
++    cudaCheck(cudaDeviceGetAttribute(&computeMode, cudaDevAttrComputeMode, dev));
++    if ( computeMode == cudaComputeModeProhibited )
+       cudaDie("device in prohibited mode");
+     if ( deviceProp.major < 3 )
+       cudaDie("device not of compute capability 3.0 or higher");

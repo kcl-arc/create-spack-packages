@@ -631,20 +631,33 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
                     # ${CUDA_CUDA_LIBRARY}), but that PRIVATE scope means CMake
                     # correctly does not propagate it as a link requirement to
                     # the final `lmp` executable target. liblammps.so ends up
-                    # with a NEEDED libcuda.so.1 entry, but the rpath CMake
-                    # bakes into it (CMAKE_INSTALL_RPATH_USE_LINK_PATH) is a
-                    # runtime-only mechanism read by the dynamic loader at
-                    # launch -- it is not consulted by `ld` when resolving
-                    # transitively-needed symbols during the *separate*,
-                    # later `lmp` link. That link fails with exactly the
-                    # remedy `ld` itself suggests: "not found (try using
-                    # -rpath or -rpath-link)". Apply it to every executable
-                    # and shared-library link in the build, not just `lmp`
-                    # specifically, in case another GPU-linked target hits
-                    # the same gap.
-                    rpath_link_flag = "-Wl,-rpath-link,{0}".format(stub_dir)
-                    args.append(self.define("CMAKE_EXE_LINKER_FLAGS", rpath_link_flag))
-                    args.append(self.define("CMAKE_SHARED_LINKER_FLAGS", rpath_link_flag))
+                    # with a NEEDED libcuda.so.1 entry that `lmp`'s own link
+                    # never gets told how to satisfy.
+                    #
+                    # Confirmed directly on the cluster that the stub itself is
+                    # not the issue: it exists, has the expected SONAME
+                    # (libcuda.so.1), and exports the needed symbols (cuInit,
+                    # cuMemFree_v2, etc. via `nm -D`). Tried `-Wl,-rpath-link`
+                    # first, on the assumption that just letting `ld` locate the
+                    # file would be enough -- it reached the final link
+                    # correctly (confirmed in a real build log) but the same
+                    # undefined-reference errors persisted. `-rpath-link` only
+                    # helps `ld` locate a NEEDED library (mainly to chase
+                    # further transitive dependencies and silence the "not
+                    # found" warning); it does not reliably pull that
+                    # library's own symbols into the current link's resolution
+                    # set to satisfy otherwise-undefined references elsewhere
+                    # in the link. Passing it as a real link input (-L + -lcuda)
+                    # rather than a search hint is the same thing GPU.cmake
+                    # already does privately for the `gpu` target -- exposed
+                    # here to every executable and shared-library link in the
+                    # build, not just `lmp` specifically, in case another
+                    # GPU-linked target hits the same gap. Keeping
+                    # -rpath-link too: harmless, and still useful for any
+                    # further transitively-needed library it might chase.
+                    stub_link_flags = "-Wl,-rpath-link,{0} -L{0} -lcuda".format(stub_dir)
+                    args.append(self.define("CMAKE_EXE_LINKER_FLAGS", stub_link_flags))
+                    args.append(self.define("CMAKE_SHARED_LINKER_FLAGS", stub_link_flags))
             elif spec.satisfies("+opencl"):
                 # LAMMPS downloads and bundles its own OpenCL ICD Loader by default
                 args.append(self.define("USE_STATIC_OPENCL_LOADER", False))

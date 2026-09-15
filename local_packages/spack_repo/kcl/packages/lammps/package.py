@@ -625,6 +625,26 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
                     args.append(
                         self.define("CUDA_CUDA_LIBRARY", os.path.join(stub_dir, "libcuda.so"))
                     )
+
+                    # The two variables above are enough for the internal `gpu`
+                    # library target (GPU.cmake links it PRIVATE against
+                    # ${CUDA_CUDA_LIBRARY}), but that PRIVATE scope means CMake
+                    # correctly does not propagate it as a link requirement to
+                    # the final `lmp` executable target. liblammps.so ends up
+                    # with a NEEDED libcuda.so.1 entry, but the rpath CMake
+                    # bakes into it (CMAKE_INSTALL_RPATH_USE_LINK_PATH) is a
+                    # runtime-only mechanism read by the dynamic loader at
+                    # launch -- it is not consulted by `ld` when resolving
+                    # transitively-needed symbols during the *separate*,
+                    # later `lmp` link. That link fails with exactly the
+                    # remedy `ld` itself suggests: "not found (try using
+                    # -rpath or -rpath-link)". Apply it to every executable
+                    # and shared-library link in the build, not just `lmp`
+                    # specifically, in case another GPU-linked target hits
+                    # the same gap.
+                    rpath_link_flag = "-Wl,-rpath-link,{0}".format(stub_dir)
+                    args.append(self.define("CMAKE_EXE_LINKER_FLAGS", rpath_link_flag))
+                    args.append(self.define("CMAKE_SHARED_LINKER_FLAGS", rpath_link_flag))
             elif spec.satisfies("+opencl"):
                 # LAMMPS downloads and bundles its own OpenCL ICD Loader by default
                 args.append(self.define("USE_STATIC_OPENCL_LOADER", False))

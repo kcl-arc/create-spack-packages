@@ -603,6 +603,28 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
                 if cuda_arch != "none":
                     args.append(self.define("GPU_ARCH", "sm_{0}".format(cuda_arch[0])))
                 args.append(self.define_from_variant("CUDA_MPS_SUPPORT", "cuda_mps"))
+
+                # cmake/Modules/Packages/GPU.cmake finds the CUDA *driver* stub
+                # (needed at build time; the real libcuda.so comes from the host
+                # driver at runtime) by augmenting CMAKE_LIBRARY_PATH with
+                # ${CUDA_TOOLKIT_ROOT_DIR}/lib64/stubs and .../lib/stubs before
+                # re-running find_package(CUDA REQUIRED). Those two relative
+                # paths match NVIDIA's own installer layout, but Spack's cuda
+                # package uses the alternate SDK layout instead
+                # (targets/<arch>/lib/stubs), so GPU.cmake's own search never
+                # finds it and CUDA_CUDA_LIBRARY is left unresolved -- silently,
+                # since target_link_libraries() with an empty/NOTFOUND variable
+                # just contributes nothing, so this doesn't fail until the final
+                # link step complains about undefined cuXxx references instead.
+                # Setting LIBRARY_PATH (a linker env var) does not help here:
+                # this resolution happens inside CMake's own variable/cache
+                # system at configure time, before any compiler/linker runs.
+                stub_dir = self.spec["cuda"].prefix.targets + "/x86_64-linux/lib/stubs"
+                if os.path.isdir(stub_dir):
+                    args.append(self.define("CMAKE_LIBRARY_PATH", stub_dir))
+                    args.append(
+                        self.define("CUDA_CUDA_LIBRARY", os.path.join(stub_dir, "libcuda.so"))
+                    )
             elif spec.satisfies("+opencl"):
                 # LAMMPS downloads and bundles its own OpenCL ICD Loader by default
                 args.append(self.define("USE_STATIC_OPENCL_LOADER", False))
@@ -716,19 +738,6 @@ class Lammps(CMakePackage, CudaPackage, ROCmPackage, PythonExtension):
     def setup_build_environment(self, env: EnvironmentModifications) -> None:
         if self.spec.satisfies("+intel %aocc"):
             env.append_flags("LDFLAGS", "-lalm -lm")
-
-        if self.spec.satisfies("+cuda"):
-            # libcuda.so (the CUDA *driver* library) is supplied by the host's
-            # NVIDIA driver at runtime, not by the CUDA toolkit -- Spack's cuda
-            # package deliberately excludes its build-time driver stub from its
-            # own libs/RPATH wiring for exactly that reason (see cuda's `libs`
-            # property and `non_bindable_shared_objects`). The GPU package here
-            # still needs the stub on the link line at build time, or the final
-            # link fails with undefined references to cuMemsetD8Async,
-            # cuMemcpyHtoD_v2, etc.
-            stub_dir = self.spec["cuda"].prefix.targets + "/x86_64-linux/lib/stubs"
-            if os.path.isdir(stub_dir):
-                env.prepend_path("LIBRARY_PATH", stub_dir)
 
     def setup_run_environment(self, env: EnvironmentModifications) -> None:
         env.set("LAMMPS_POTENTIALS", self.prefix.share.lammps.potentials)

@@ -4,8 +4,7 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 import os
 
-from spack import *
-
+from spack.package import *
 
 class Orca(Package):
     """ORCA is an ab initio quantum chemistry program package that contains modern electronic 

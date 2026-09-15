@@ -1,0 +1,72 @@
+# Copyright 2013-2022 Lawrence Livermore National Security, LLC and other
+# Spack Project Developers. See the top-level COPYRIGHT file for details.
+#
+# SPDX-License-Identifier: (Apache-2.0 OR MIT)
+import os
+
+from spack_repo.builtin.build_systems.generic import Package
+
+from spack.package import *
+
+
+class GaussianAvx(Package):
+    """Gaussian is a computer program for computational chemistry"""
+
+    homepage = "http://www.gaussian.com/"
+    manual_download = True
+
+    maintainers = ['antoniokaust']
+
+    version('16-C', sha256='81b08d16eb18f2edae814609b068600b80ed7a275662f48f2326e8771f132edb')
+    version('09-E', sha256='b0a28233adef6cfc16c5984cf95660baabfcd67d286fea92afe8fa3bb4414b12')
+
+    depends_on('tcsh')
+
+    def patch(self):
+        csh = join_path(self.spec['tcsh'].prefix.bin, 'csh')
+        tcsh = join_path(self.spec['tcsh'].prefix.bin, 'tcsh')
+        for d in ['bsd', 'tests']:
+            for f in next(os.walk(d))[2]:
+                filter_file('^#!/bin/csh', '#!{0}'.format(csh), join_path(d, f))
+                filter_file('^#!/bin/tcsh', '#!{0}'.format(tcsh), join_path(d, f))
+
+    @property
+    def ver(self):
+        return self.version.string.split('-')[0]
+
+    @property
+    def g_root(self):
+        return join_path(self.prefix, 'g' + self.ver)
+
+    @property
+    def g_bsd(self):
+        return join_path(self.g_root, 'bsd')
+
+    def url_for_version(self, version):
+        return "file:///software/local_software/gaussian/g{1}-avx.tar.gz".format(os.getcwd(), version)
+
+    def install(self, spec, prefix):
+        install_tree('.', self.g_root)
+
+    @run_after('install')
+    def bsd_install(self):
+        with working_dir(self.g_root):
+            bsd_install = Executable(join_path('bsd', 'install'))
+            bsd_install()
+
+    def setup_run_environment(self, env):
+        env.set('g' + self.ver + 'root', self.prefix)
+
+        env.prepend_path('GAUSS_EXEDIR', self.g_root)
+        env.prepend_path('GAUSS_EXEDIR', self.g_bsd)
+
+        env.prepend_path('PATH', self.g_root)
+        env.prepend_path('PATH', self.g_bsd)
+
+        env.set('GAUSS_LEXEDIR', join_path(self.g_root, 'linda-exe'))
+        env.set('GAUSS_ARCHDIR', join_path(self.g_root, 'arch'))
+        env.set('GAUSS_BSDDIR', self.g_bsd)
+        env.set('G' + self.ver + 'BASIS', join_path(self.g_root, 'basis'))
+
+        env.prepend_path('LD_LIBRARY_PATH', self.g_root)
+        env.prepend_path('LD_LIBRARY_PATH', self.g_bsd)

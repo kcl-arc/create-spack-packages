@@ -4,7 +4,8 @@
 # SPDX-License-Identifier: (Apache-2.0 OR MIT)
 import os
 
-from spack import *
+from spack.package import *
+
 
 class Crest(Package):
     """Conformer-Rotamer Ensemble Sampling Tool based on the xtb

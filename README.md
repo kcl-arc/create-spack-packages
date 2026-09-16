@@ -7,7 +7,9 @@ The `production` branch is currently used for installing the next iteration of m
 
 ## Using with er-spack-development
 
-`er-spack-development` is a repository that allows deployment of Spack packages in a very similar environment to that provided on CREATE HPC.
+`er-spack-development` is a repository that allows deployment of Spack packages in a very similar environment to that provided on CREATE HPC. It will be updated to reflect the latest changes in how builds are managed as soon as possible after the impending Alma 10 upgrade is completed.
+
+Currently to use this repo with `er-spack-development` use teh `original_pkgs` branch.
 
 `submit_example.py` in `er-spack-development` reads `package_installs/<package>.yaml` and submits one Slurm job for each entry in `versions[<selected_version>]`.
 

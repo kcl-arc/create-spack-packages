@@ -3,7 +3,7 @@
 Making it easier for colleagues to contribute to modules on CREATE HPC (and potentially upstreaming to https://github.com/spack/spack-packages)
 as well as encouraging more transparency in module building.
 
-The `production` branch is currently used for installing the next iteration of modules on CREATE HPC that will become live when CREATE is updated to Alma 10. The produciton branch will then become `v1.2.1` and it is anticipated that a new branch (e.g. will be created for the next iteration of Spack packages).
+The `production` branch was used for installing the modules that went live with the Alma 10 upgrade on CREATE HPC and has been tagged `v1.2.1`. Ongoing work now targets the `develop` branch (renamed from `production`) ahead of the next release.
 
 ## Using with er-spack-development
 

@@ -69,6 +69,13 @@ class Psi4(CMakePackage):
     # depends_on('pcm-solver')
     # depends_on('chemps2')
 
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+
+    depends_on('py-pybind11@3:', type='build', when='@1.11:')
+    depends_on('py-pip', type='build', when='@1.11:')
+    depends_on('git', type='build', when='@1.11:')
+
     def cmake_args(self):
         spec = self.spec
 

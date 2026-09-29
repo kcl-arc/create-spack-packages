@@ -34,6 +34,10 @@ class Kraken2(Package):
     depends_on("perl", type=("build", "run"))
     depends_on("rsync", type=("run"))
     depends_on("wget", type=("run"))
+    depends_on("c", type="build")
+    depends_on("cxx", type="build")
+    depends_on("gmake", type="build")
+    depends_on("zlib-api")
 
     def install(self, spec, prefix):
         installer = Executable("./install_kraken2.sh")

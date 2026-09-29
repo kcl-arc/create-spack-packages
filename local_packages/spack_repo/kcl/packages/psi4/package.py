@@ -76,6 +76,15 @@ class Psi4(CMakePackage):
     depends_on('py-pip', type='build', when='@1.11:')
     depends_on('git', type='build', when='@1.11:')
 
+    def patch(self):
+        # <eigen3/Eigen/Core> assumes one shared include dir (conda); Spack only
+        # puts <eigen>/include/eigen3 on the include path
+        if self.spec.satisfies("@1.11:"):
+            filter_file("<eigen3/Eigen/Core>", "<Eigen/Core>",
+                        "psi4/src/psi4/libmints/matrix.h",
+                        "psi4/src/psi4/libfock/SplitJK.h",
+                        string=True)
+
     def cmake_args(self):
         spec = self.spec
 

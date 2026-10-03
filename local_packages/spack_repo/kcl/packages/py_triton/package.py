@@ -42,7 +42,8 @@ class PyTriton(PythonPackage):
         """Set environment variables used to control the build"""
         if self.spec.satisfies("%clang"):
             env.set("TRITON_BUILD_WITH_CLANG_LLD", "True")
-        # Build in parallel to speed up build times
+        # Cap ninja at Spack's -j; Triton's setup.py otherwise defaults 
+        # MAX_JOBS to 2 * os.cpu_count() (the whole node, not the Slurm allocation)
         env.set("MAX_JOBS", str(make_jobs))
 
     @property

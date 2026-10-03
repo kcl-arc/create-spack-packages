@@ -300,15 +300,6 @@ class Charmpp(Package):
     #    provides('mpi@2', when='@6.7.1:
     #            build-target=LIBS backend={0}'.format(b))
 
-    @when("%c=gcc@14:")
-    def flag_handler(self, name, flags):
-        # GCC 14 made implicit-int etc. errors; the bundled ROMIO's configure
-        # test (`main()` with no return type) then fails with "Unable to
-        # compile a simple MPI program".
-        if name == "cflags":
-            flags.append("-fpermissive")
-        return (flags, None, None)
-
     def install(self, spec, prefix):
         if "backend=mpi" not in self.spec or "backend=netlrts" not in self.spec:
             if self.spec.satisfies("+pthreads"):

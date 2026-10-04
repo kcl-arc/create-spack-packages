@@ -85,6 +85,11 @@ class Namd(MakefilePackage, CudaPackage, ROCmPackage):
     # Not version-gated to a specific CUDA release: the attribute-query API is
     # stable across versions, so this is safe for older CUDA toolkits too.
     patch("namd-cuda13-computemode.patch", when="@3.0.2: +cuda")
+    # GCC 14's libstdc++ headers use variable templates/inline variables even in
+    # C++11 mode; nvcc's front end rejects them under NAMD's hard-coded
+    # `nvcc -std=c++11` (arch/Linux-x86_64.cuda). Compile the .cu files as C++14.
+    # Gated on gcc@14: so the patches= hash only changes where it's needed.
+    patch("namd-nvcc-cxx14.patch", when="@3.0.2 +cuda %cxx=gcc@14:")
 
     depends_on("c", type="build")
     depends_on("cxx", type="build")

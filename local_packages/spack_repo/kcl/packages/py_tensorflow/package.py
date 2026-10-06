@@ -456,6 +456,11 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
         when="@2.20",
     )
 
+    # GCC rejects unqualified MLIR cast<T>()/isa<T>() in tensorflow::dtensor (clang
+    # accepts them as a C++20 extension). Backport of
+    # https://github.com/tensorflow/tensorflow/pull/125229
+    patch("dtensor-mlir-namespace.patch", when="@=2.20.0")
+
     # https://github.com/spack/spack/issues/49958
     patch(
         "https://github.com/tensorflow/tensorflow/pull/90563.patch?full_index=1",

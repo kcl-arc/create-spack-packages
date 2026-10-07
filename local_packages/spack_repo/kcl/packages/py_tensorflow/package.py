@@ -930,6 +930,21 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
         filter_file("build:opt --copt=-march=native", "", ".tf_configure.bazelrc")
         filter_file("build:opt --host_copt=-march=native", "", ".tf_configure.bazelrc")
 
+    # TF 2.20's XNNPACK compiles its AVX-VNNI-INT8 kernels with -mavxvnniint8,
+    # which GCC 12 doesn't have (added in GCC 13). Turn them off the same way
+    # TF's own rocm and android configs do. None of the gcc 12 targets
+    # (icelake, cascadelake, zen2, zen3) have AVX-VNNI-INT8, so nothing is lost.
+    # @when keeps this method out of the package hash for other compilers.
+    @run_after("configure", when="%gcc@:12")
+    @when("%gcc@:12")
+    def disable_xnnpack_avxvnniint8(self):
+        # leading newline: post_configure_fixes doesn't end the file with one
+        with open(".tf_configure.bazelrc", mode="a") as f:
+            f.write("\nbuild --define=xnn_enable_avxvnniint8=false\n")
+            # TF isn't tested with GCC upstream: report every compile error in
+            # one run, not only the first
+            f.write("build --keep_going\n")
+
     def build(self, spec, prefix):
         # Bazel needs the directory to exist on install
         mkdirp(python_platlib)

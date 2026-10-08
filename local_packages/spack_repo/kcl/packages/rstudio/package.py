@@ -68,7 +68,7 @@ class Rstudio(CMakePackage):
     depends_on("boost@1.83: cxxstd=11", when="@v2024.12.1_563")
     depends_on("qt+webkit@5.12.8:", when="+desktop")
     depends_on("patchelf@0.9:", when="+desktop")
-    # 2026.09 fetches yaml-cpp itself (CMake FetchContent) and has no option to use a system one
+    # 2026.09 fetches yaml-cpp 0.8.0 itself (CMake FetchContent), along with fmt, libgit2, etc.
     depends_on("yaml-cpp@:0.6.3", when="@:v2024.12.1_563")  # find_package fails with newest version
     # RStudio's own install-yarn installs classic yarn (1.x)
     depends_on("yarn@1", type="build")
@@ -112,11 +112,16 @@ class Rstudio(CMakePackage):
     def cmake_args(self):
         args = [
             "-DRSTUDIO_PACKAGE_BUILD=Yes",
-            "-DRSTUDIO_USE_SYSTEM_YAML_CPP=Yes",
             "-DRSTUDIO_USE_SYSTEM_SOCI=Yes",
         ]
+        # 2026.09 builds its own Boost and fetches its own yaml-cpp
         if self.spec.satisfies("@:v2024.12.1_563"):
-            args.append("-DRSTUDIO_USE_SYSTEM_BOOST=Yes")
+            args.extend(
+                [
+                    "-DRSTUDIO_USE_SYSTEM_BOOST=Yes",
+                    "-DRSTUDIO_USE_SYSTEM_YAML_CPP=Yes",
+                ]
+            )
         if self.spec.satisfies("+desktop"):
             args.extend(
                 [

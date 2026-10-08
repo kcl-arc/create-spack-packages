@@ -1,0 +1,23 @@
+Use the double-brace form for absl::NoDestructor in group_events.cc so GCC 12 accepts it.
+GCC 12 finds NoDestructor(<braced list>) ambiguous between NoDestructor(T&&) and the
+deleted copy constructor; GCC 13+ and clang pick T&&. NoDestructor{{...}} is the form
+abseil's no_destructor.h documents for initializer lists. Not fixed upstream (TF 2.21,
+XLA main).
+
+--- a/third_party/xla/xla/tsl/profiler/utils/group_events.cc
++++ b/third_party/xla/xla/tsl/profiler/utils/group_events.cc
+@@ -168,12 +168,12 @@
+ 
+ bool IsImplicitRootEvent(const XEventVisitor& event) {
+   static const absl::NoDestructor<absl::flat_hash_set<int64_t>>
+-      kImplicitRootEvents({
++      kImplicitRootEvents{{
+           HostEventType::kFunctionRun,
+           HostEventType::kSessionRun,
+           HostEventType::kRunGraph,
+           HostEventType::kExecutorStateProcess,
+-      });
++      }};
+   return event.Type().has_value() &&
+          kImplicitRootEvents->contains(*event.Type());
+ }

@@ -1,0 +1,121 @@
+diff --git a/src/cpp/server/ServerMain.cpp b/src/cpp/server/ServerMain.cpp
+index ec913a57eb..9d4513e33a 100644
+--- a/src/cpp/server/ServerMain.cpp
++++ b/src/cpp/server/ServerMain.cpp
+@@ -781,7 +781,11 @@ int main(int argc, char * const argv[])
+          uri_handlers::setRequestFilter(rootPathRequestFilter);
+       }
+       // initialize socket rpc so we can send distributed events
+-      error = key_file::readSecureKeyFile("session-rpc-key", &s_rpcSecret);
++      if (options.sessionRpcKeyFile().isEmpty())
++         error = key_file::readSecureKeyFile("session-rpc-key", &s_rpcSecret);
++      else
++         error = key_file::readSecureKeyFile(options.sessionRpcKeyFile(), &s_rpcSecret);
++
+       if (error)
+          return core::system::exitFailure(error, ERROR_LOCATION);
+ 
+@@ -790,7 +794,7 @@ int main(int argc, char * const argv[])
+          return core::system::exitFailure(error, ERROR_LOCATION);
+ 
+       // initialize the session rpc handler
+-      error = session_rpc::initialize();
++      error = session_rpc::initialize(options.sessionRpcKeyFile());
+       if (error)
+          return core::system::exitFailure(error, ERROR_LOCATION);
+ 
+diff --git a/src/cpp/server/include/server/ServerOptions.gen.hpp b/src/cpp/server/include/server/ServerOptions.gen.hpp
+index ef74425ffd..dee1242fc0 100644
+--- a/src/cpp/server/include/server/ServerOptions.gen.hpp
++++ b/src/cpp/server/include/server/ServerOptions.gen.hpp
+@@ -88,6 +88,9 @@ protected:
+       ("secure-cookie-key-file",
+       value<std::string>(&secureCookieKeyFile_)->default_value(""),
+       "If set, overrides the default path of the secure-cookie-key file used for encrypting cookies.")
++      ("session-rpc-key-file",
++      value<std::string>(&sessionRpcKeyFile_)->default_value(""),
++      "If set, overrides the default path of the session-rpc-key.")
+       ("server-data-dir",
+       value<std::string>(&serverDataDir_)->default_value("/var/run/rstudio-server"),
+       "Path to the data directory where RStudio Server will write run-time state.")
+@@ -242,6 +245,7 @@ public:
+    std::string serverPidFile() const { return serverPidFile_; }
+    bool serverSetUmask() const { return serverSetUmask_; }
+    core::FilePath secureCookieKeyFile() const { return core::FilePath(secureCookieKeyFile_); }
++   core::FilePath sessionRpcKeyFile() const { return core::FilePath(sessionRpcKeyFile_); }
+    core::FilePath serverDataDir() const { return core::FilePath(serverDataDir_); }
+    std::vector<std::string> serverAddHeaders() const { return serverAddHeaders_; }
+    std::string wwwAddress() const { return wwwAddress_; }
+@@ -291,6 +295,7 @@ protected:
+    bool deprecatedServerAppArmorEnabled_;
+    bool serverSetUmask_;
+    std::string secureCookieKeyFile_;
++   std::string sessionRpcKeyFile_;
+    std::string serverDataDir_;
+    std::vector<std::string> serverAddHeaders_;
+    std::string wwwAddress_;
+diff --git a/src/cpp/server/include/server/session/ServerSessionRpc.hpp b/src/cpp/server/include/server/session/ServerSessionRpc.hpp
+index 5de565d8ba..74838e9b46 100644
+--- a/src/cpp/server/include/server/session/ServerSessionRpc.hpp
++++ b/src/cpp/server/include/server/session/ServerSessionRpc.hpp
+@@ -27,6 +27,7 @@
+ namespace rstudio {
+ namespace core {
+    class Error;
++   class FilePath;
+ }
+ }
+ 
+@@ -34,7 +35,7 @@ namespace rstudio {
+ namespace server {
+ namespace session_rpc {
+    
+-core::Error initialize();
++core::Error initialize(const core::FilePath& secureKeyFile);
+ core::Error startup();
+ 
+ // use to add session-rpc handler requiring RPC secret to be present; this is what
+diff --git a/src/cpp/server/server-options.json b/src/cpp/server/server-options.json
+index 98dc32c6a6..50281d9909 100644
+--- a/src/cpp/server/server-options.json
++++ b/src/cpp/server/server-options.json
+@@ -81,6 +81,13 @@
+             "defaultValue": "",
+             "description": "If set, overrides the default path of the secure-cookie-key file used for encrypting cookies."
+          },
++         {
++            "name": "session-rpc-key-file",
++            "memberName": "sessionRpcKeyFile_",
++            "type": "core::FilePath",
++            "defaultValue": "",
++            "description": "If set, overrides the default path of the session-rpc-key file."
++         },
+          {
+             "name": "server-data-dir",
+             "memberName": "serverDataDir_",
+diff --git a/src/cpp/server/session/ServerSessionRpc.cpp b/src/cpp/server/session/ServerSessionRpc.cpp
+index 349e6243c4..083a2b1c85 100644
+--- a/src/cpp/server/session/ServerSessionRpc.cpp
++++ b/src/cpp/server/session/ServerSessionRpc.cpp
+@@ -217,7 +217,7 @@ Error startup()
+    return Success();
+ }
+ 
+-Error initialize()
++Error initialize(const FilePath& secureKeyFile)
+ {
+    // create the async server instance
+    s_pSessionRpcServer = boost::make_shared<http::LocalStreamAsyncServer>(
+@@ -235,8 +235,11 @@ Error initialize()
+             boost::posix_time::milliseconds(kSessionRpcCmdPeriodMs));
+ 
+    // create the shared secret
+-   error = key_file::readSecureKeyFile("session-rpc-key",
+-                                       &s_sessionSharedSecret);
++   if (secureKeyFile.isEmpty())
++      error = key_file::readSecureKeyFile("session-rpc-key", &s_sessionSharedSecret);
++   else
++      error = key_file::readSecureKeyFile(secureKeyFile, &s_sessionSharedSecret);
++
+    if (error)
+       return error;

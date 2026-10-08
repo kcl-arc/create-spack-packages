@@ -461,6 +461,10 @@ class PyTensorflow(Package, CudaPackage, ROCmPackage, PythonExtension):
     # https://github.com/tensorflow/tensorflow/pull/125229
     patch("dtensor-mlir-namespace.patch", when="@=2.20.0")
 
+    # GCC 12 finds absl::NoDestructor(<braced list>) ambiguous in XLA's
+    # group_events.cc; GCC 13+ and clang accept it. Not fixed upstream.
+    patch("xla-group-events-gcc12.patch", when="@=2.20.0 %gcc@:12")
+
     # https://github.com/spack/spack/issues/49958
     patch(
         "https://github.com/tensorflow/tensorflow/pull/90563.patch?full_index=1",

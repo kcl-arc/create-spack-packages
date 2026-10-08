@@ -57,14 +57,15 @@ class Rstudio(CMakePackage):
     depends_on("cmake@3.21.4:", type="build")
     depends_on("pkgconfig", type="build")
     depends_on("ant", type="build")
+    # 2026.09 needs Boost 1.91.0, which Spack doesn't have yet, so it builds RStudio's bundled
+    # Boost instead (see install_deps)
     depends_on(
         "boost+pic+atomic+chrono+date_time+filesystem+iostreams+program_options+random+regex"
-        "+system+thread"
+        "+system+thread",
+        when="@:v2024.12.1_563",
     )
     depends_on("boost@1.78: cxxstd=11", when="@:v2023.03.0_386")
     depends_on("boost@1.83: cxxstd=11", when="@v2024.12.1_563")
-    # 2026.09 asks for Boost 1.91.0, which Spack doesn't have yet (see cmake_args)
-    depends_on("boost@1.90: +url cxxstd=17", when="@v2026.09.0_174:")
     depends_on("qt+webkit@5.12.8:", when="+desktop")
     depends_on("patchelf@0.9:", when="+desktop")
     # 2026.09 fetches yaml-cpp itself (CMake FetchContent) and has no option to use a system one
@@ -112,9 +113,10 @@ class Rstudio(CMakePackage):
         args = [
             "-DRSTUDIO_PACKAGE_BUILD=Yes",
             "-DRSTUDIO_USE_SYSTEM_YAML_CPP=Yes",
-            "-DRSTUDIO_USE_SYSTEM_BOOST=Yes",
             "-DRSTUDIO_USE_SYSTEM_SOCI=Yes",
         ]
+        if self.spec.satisfies("@:v2024.12.1_563"):
+            args.append("-DRSTUDIO_USE_SYSTEM_BOOST=Yes")
         if self.spec.satisfies("+desktop"):
             args.extend(
                 [
@@ -124,10 +126,6 @@ class Rstudio(CMakePackage):
             )
         else:
             args.extend(["-DRSTUDIO_TARGET=Server"])
-
-        if self.spec.satisfies("@v2026.09.0_174:"):
-            # find_package(Boost) is called with RStudio's requested version as a minimum
-            args.append(f"-DRSTUDIO_BOOST_REQUESTED_VERSION={self.spec['boost'].version}")
 
         return args
 
@@ -183,6 +181,25 @@ class Rstudio(CMakePackage):
                 deps = Executable("./install-gwt")
                 deps()
 
+            # Build RStudio's bundled Boost (statically linked, namespace rstudio_boost) in the
+            # stage rather than a shared /tmp/rstudio-build, and in parallel
+            filter_file(
+                'BOOST_BUILDDIR="/tmp/rstudio-build/${BOOST_FOLDER}"',
+                'BOOST_BUILDDIR="{0}/${{BOOST_FOLDER}}"'.format(
+                    join_path(self.stage.path, "rstudio-build")
+                ),
+                "dependencies/common/install-boost",
+                string=True,
+            )
+            filter_file(
+                "./b2 -q ${BOOST_EXTRA}",
+                "./b2 -q -j{0} ${{BOOST_EXTRA}}".format(make_jobs),
+                "dependencies/common/install-boost",
+                string=True,
+            )
+            deps = Executable("./dependencies/common/install-boost")
+            deps()
+
         # two methods for pandoc
         # 1) replace install-pandoc:
         #    - link pandoc into tools/pandoc/$PANDOC_VERSION
@@ -217,3 +234,7 @@ class Rstudio(CMakePackage):
             pam_helper_script = join_path(self.prefix.bin, "pam-env-helper")
             install(join_path(self.package_dir, "pam-env-helper"), pam_helper_script)
             set_executable(pam_helper_script)
+
+        # The bundled Boost is linked statically, so its headers and libraries aren't needed
+        if self.spec.satisfies("@v2026.09.0_174:"):
+            remove_linked_tree(join_path(self.prefix.tools, "boost"))

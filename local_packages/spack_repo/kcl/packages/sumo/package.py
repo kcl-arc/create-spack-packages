@@ -43,6 +43,10 @@ class Sumo(CMakePackage):
     depends_on("proj")
     depends_on("fox@1.6.57+opengl")
     depends_on("swig", type="build")
+    # On zen2, gettext reaches CMAKE_PREFIX_PATH via fox -> mesa -> llvm@15 -> elfutils+nls, so
+    # CMake enables i18n and i18n.py then needs msgcat on PATH. Limited to zen2 so sumo hashes
+    # on other targets (which skip i18n) don't change.
+    depends_on("gettext", type="build", when="target=zen2")
     depends_on("java", type=("build", "run"))
     depends_on("gdal", when="+gdal")
     depends_on("ffmpeg", when="+ffmpeg")

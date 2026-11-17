@@ -5,22 +5,33 @@ on:
     branches: [staging, develop]
     types: [opened, reopened, synchronize, edited]
 
+permissions:
+  contents: read
+
 jobs:
   enforce-staging-source:
     runs-on: ubuntu-latest
     steps:
       - name: Enforce source branch only for develop PRs
+        # Branch names are set by whoever opens the PR, so they're passed in as
+        # environment variables rather than pasted into the script with ${{ }}.
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          THIS_REPO: ${{ github.repository }}
         run: |
-          echo "Base branch: '${{ github.base_ref }}'"
-          echo "Head branch: '${{ github.head_ref }}'"
+          echo "Base branch: '${BASE_REF}'"
+          echo "Head branch: '${HEAD_REPO}:${HEAD_REF}'"
 
-          if [ "${{ github.base_ref }}" != "develop" ]; then
+          if [ "${BASE_REF}" != "develop" ]; then
             echo "Not a PR to develop, skipping source restriction."
             exit 0
           fi
 
-          if [ "${{ github.head_ref }}" != "staging" ]; then
-            echo "Only PRs from 'staging' to 'develop' are allowed."
-            echo "Current source branch: '${{ github.head_ref }}'"
+          # Check the repo too: a fork can have its own branch called staging.
+          if [ "${HEAD_REPO}" != "${THIS_REPO}" ] || [ "${HEAD_REF}" != "staging" ]; then
+            echo "Only PRs from '${THIS_REPO}:staging' to 'develop' are allowed."
+            echo "Current source branch: '${HEAD_REPO}:${HEAD_REF}'"
             exit 1
           fi

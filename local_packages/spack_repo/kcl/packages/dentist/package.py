@@ -22,7 +22,6 @@ class Dentist(Package):
     """
 
     homepage = "https://github.com/Yves-CHEN/DENTIST"
-    url = "file:///scratch/users/k2692681/software/dentist/DENTIST.1.1.0.0.gz"
 
     maintainers("harrysharma1")
 
